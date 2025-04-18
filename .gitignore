@@ -1,0 +1,55 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+/dbee-api/.classpath
+/dbee-api/.project
+/dbee-api/.settings
+/dbee-api/target
+/dbee-application/.classpath
+/dbee-application/.project
+/dbee-application/.settings
+/dbee-application/target
+/dbee-infrastructure/.classpath
+/dbee-infrastructure/.project
+/dbee-infrastructure/.settings
+/dbee-infrastructure/target
+/dbee-rest/.classpath
+/dbee-rest/.project
+/dbee-rest/.settings
+/dbee-rest/target
+/dbee-web/.classpath
+/dbee-web/.project
+/dbee-web/.settings
+/dbee-web/target
+/dbee-script/.classpath
+/dbee-script/.project
+/dbee-script/.settings
+/dbee-script/target
+/target
+/data
+/log
+/dbee-agent/.classpath
+/dbee-agent/.project
+/dbee-agent/.settings
+/dbee-agent/target
+/.idea

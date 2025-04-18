@@ -1,0 +1,42 @@
+<div id="log-container" style="height: 580px; overflow-y: scroll; background: #000; color: #aaa; padding: 10px;">
+	<div></div>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+</div>
+<script src="../../lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+<script src="../../js/common.js" charset="utf-8"></script>
+<script>
+	layui.use(['form'], function () {
+        var $ = layui.jquery,
+			layer = layui.layer;
+			
+		var loginToken = getCookie('login_token');
+		var replicaName = parent.replicaName;
+		var appId = localStorage.getItem('appId_' + parent.layui.$("#userName").val());
+		var envId = parent.envId;
+		var ws = 'ws://';
+		if(window.location.protocol == 'https:'){
+			ws = 'wss://';
+		}
+        var websocket = new WebSocket(ws + window.location.host +'/replica/log/'+ appId +'/'+ envId +'/'+ replicaName +'/' + loginToken);
+        websocket.onmessage = function(event) {
+            $("#log-container div").append(event.data);
+            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+        };
+		websocket.onclose = function(event) {
+            websocket.close();
+        };
+		websocket.onerror = function(event){
+			websocket.close();
+		};
+    });
+</script>

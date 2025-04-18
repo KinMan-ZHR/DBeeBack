@@ -1,0 +1,305 @@
+<div class="layuimini-main">
+	<div class="layui-form layuimini-form" lay-filter="update-form">
+		<div class="layui-form-item">
+			<label class="layui-form-label required">调度类型</label>
+			<div class="layui-input-block">
+				<select name="schedulingType" lay-filter="schedulingType" id="schedulingType2" lay-verify="required" lay-reqtext="调度类型不能为空" disabled>
+					<option value="">请选择</option>
+					<option value="1">节点亲和</option>
+					<option value="2">节点容忍</option>
+					<option value="3">副本亲和</option>
+					<option value="4">副本反亲和</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label required">名称</label>
+			<div class="layui-input-block">
+				<input type="text" name="customizedName" placeholder="最多64个字符" lay-verify="required" lay-reqtext="名称不能为空" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="affinityLevelDiv">
+			<label class="layui-form-label required">亲和程度</label>
+			<div class="layui-input-block">
+				<select name="affinityLevel" lay-filter="affinityLevel" id="affinityLevel">
+					<option value="">请选择</option>
+					<option value="1">硬亲和</option>
+					<option value="2">软亲和</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="weightDiv">
+			<label class="layui-form-label required">权重值</label>
+			<div class="layui-input-block">
+				<input type="text" name="weight" placeholder="如：100" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label required">键</label>
+			<div class="layui-input-block">
+				<input type="text" name="keyName" placeholder="请输入键" autocomplete="off" class="layui-input" lay-verify="required" lay-reqtext="键不能为空">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label required">操作符</label>
+			<div class="layui-input-block">
+				<select name="operator" lay-filter="operator" id="operator" lay-verify="required" lay-reqtext="操作符不能为空" >
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="valueListDiv">
+			<label class="layui-form-label required">值</label>
+			<div class="layui-input-block">
+				<input type="text" name="valueList" placeholder="请输入值" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="topologyKeyDiv">
+			<label class="layui-form-label">拓扑域</label>
+			<div class="layui-input-block">
+				<input type="text" name="topologyKey" placeholder="默认值：kubernetes.io/hostname" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="effectTypeDiv">
+			<label class="layui-form-label">作用类型</label>
+			<div class="layui-input-block">
+				<select name="effectType" lay-filter="effectType" id="effectType">
+					<option value="">请选择</option>
+					<option value="NoSchedule">NoSchedule</option>
+					<option value="PreferNoSchedule">PreferNoSchedule</option>
+					<option value="NoExecute">NoExecute</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="durationDiv">
+			<label class="layui-form-label">容忍时长</label>
+			<div class="layui-input-block">
+				<input type="text" name="duration" placeholder="单位：秒" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">备注</label>
+			<div class="layui-input-block">
+				<textarea name="remark" placeholder="最多64个字符" autocomplete="off" class="layui-textarea"></textarea>
+			</div>
+		</div>
+		
+		<input type="hidden" id="appId3" name="appId"/>
+		<input type="hidden" id="envId3" name="envId"/>
+		<input type="hidden" id="affinityTolerationId3" name="affinityTolerationId"/>
+		
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+			parentIndex = layer.index;
+		var appId = localStorage.getItem('appId_' + $("#userName").val());
+		var data3 = JSON.parse(parent.data3);
+		var envId = data3.envId;
+		var affinityTolerationId = data3.affinityTolerationId;
+		
+		$("#appId3").val(appId);
+		$("#envId3").val(envId);
+		$("#affinityTolerationId3").val(affinityTolerationId);
+		
+		form.render();
+		
+		initData($, form, appId, envId, affinityTolerationId);
+		
+		form.on('select(schedulingType)', function(data) {
+			initSchedulingType(form, $, data.value, $("#affinityLevel").val());
+			initOperator(form, $, data.value);
+			initDuration($, data.value, $("#effectType").val());
+			initWeight($, data.value, $("#affinityLevel").val());
+		});
+		
+		form.on('select(affinityLevel)', function(data) {
+			initWeight($, $("#schedulingType2").val(), data.value);
+		});
+		
+		form.on('select(operator)', function(data) {
+			initValueList($, data.value);
+		});
+		
+		form.on('select(effectType)', function(data) {
+			initDuration($, $("#schedulingType2").val(), data.value);
+		});
+		
+		form.on('submit(saveBtn)', function(data) {
+			//如果是亲和
+			if(data.field.schedulingType != 2){
+				if(data.field.affinityLevel == ''){
+					layer.msg('亲和类型不能为空', {icon: 5, shift: 6});
+					return false;
+				}
+				//软亲和
+				if(data.field.affinityLevel == 2){
+					if(data.field.weight == ''){
+						layer.msg('权重值不能为空', {icon: 5, shift: 6});
+						return false;
+					}
+				}else{
+					data.field.weight = '';
+				}
+				
+				//只有副本亲和和反亲和，拓扑域才有值
+				if(data.field.schedulingType != 3 && data.field.schedulingType != 4){
+					data.field.topologyKey = '';
+				}
+				
+				//如果是亲和，作用类型和容忍时长的值都应该为空
+				data.field.effectType = '';
+			}else{
+				data.field.weight == '';
+				data.field.affinityLevel = '';
+				data.field.topologyKey = '';
+			}
+			
+			if(data.field.operator == 'Exists' || data.field.operator == 'DoesNotExist'){
+				data.field.valueList = '';
+			}else if(data.field.valueList == ''){
+				layer.msg('值不能为空', {icon: 5, shift: 6});
+				return false;
+			}
+			
+			//只有作用类型为NoExecute时，才有容忍时长值
+			if(data.field.effectType != 'NoExecute'){
+				data.field.duration = '';
+			}
+			
+			$.ajax({
+				url: '/app/env/affinity/update',
+				type: 'POST',
+				dataType: "json",
+				contentType: 'application/json;charset=UTF-8',
+				data: JSON.stringify(data.field),
+				success: function(data){
+					if(data.code != "000000"){
+						layer.msg(data.message, {icon: 5, shift: 6});
+						return false;
+					}
+					layer.close(parentIndex);
+					layer.msg("保存成功", {
+						icon: 1,
+						time: 500,
+						shade: 0.01,
+						shadeClose: false}, function(){
+						parent.layui.table.reload('currentTableId2');
+					});
+				},
+				error: function(data){
+					layer.msg(data.message, {icon: 5, shift: 6});
+				}
+			});
+            return false;
+        });
+    });
+	
+	function initData($, form, appId, envId, affinityTolerationId){
+		$.ajax({
+			url: '/app/env/affinity/query',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify({'appId': appId, "envId": envId, "affinityTolerationId": affinityTolerationId}),
+			success: function(res){
+				data = res.data;
+				$("#affinityTolerationId").val(data.id);
+				initOperator(form, $, data.schedulingType);
+				
+				form.val("update-form", {
+					"customizedName": data.customizedName
+					,"schedulingType": data.schedulingType
+					,"affinityLevel": data.affinityLevel
+					,"weight": data.weight
+					,"keyName": data.keyName
+					,"operator": data.operator
+					,"valueList": data.valueList
+					,"effectType": data.effectType
+					,"duration": data.duration
+					,"remark": data.remark
+				});
+				
+				initSchedulingType(form, $, data.schedulingType);
+				initValueList($, data.operator);
+				initDuration($, data.schedulingType, data.effectType);
+				initWeight($, data.schedulingType, data.affinityLevel);
+			},
+			error: function(data){
+				layer.msg(data.message, {icon: 5, shift: 6});
+			}
+		});
+	}
+	
+	function initSchedulingType(form, $, schedulingType){
+		//节点容忍
+		if(schedulingType == 2){
+			$("#affinityLevelDiv").hide();
+			$("#effectTypeDiv").show();
+			$("#topologyKeyDiv").hide();
+		}else {
+			//副本亲和和反亲和
+			if(schedulingType == 3 || schedulingType == 4){
+				$("#topologyKeyDiv").show();
+			}else{
+				$("#topologyKeyDiv").hide();
+			}
+			$("#affinityLevelDiv").show();
+			$("#effectTypeDiv").hide();
+		}
+	}
+	
+	function initOperator(form, $, schedulingType){
+		//容忍
+		if(schedulingType == 2){
+			var option = '<option value="">请选择</option>\
+					<option value="Equal">Equal</option>\
+					<option value="Exists">Exists</option>'
+			$("#operator").html(option);
+		}else{
+			var option = '<option value="">请选择</option>\
+					<option value="In">In</option>\
+					<option value="NotIn">NotIn</option>\
+					<option value="Exists">Exists</option>\
+					<option value="DoesNotExist">DoesNotExist</option>\
+					<option value="Gt">Gt</option>\
+					<option value="Lt">Lt</option>'
+			
+		}
+		$("#operator").html(option);
+		form.render();
+	}
+	
+	function initWeight($, schedulingType, affinityLevel){
+		//非节点容忍和软亲和
+		if(schedulingType != 2 && affinityLevel == 2){
+			$("#weightDiv").show();
+		}else {
+			$("#weightDiv").hide();
+		}
+	}
+	
+	function initValueList($, operator){
+		if(operator == 'Exists' || operator == 'DoesNotExist'){
+			$("#valueListDiv").hide();
+		}else {
+			$("#valueListDiv").show();
+		}
+	}
+	
+	function initDuration($, schedulingType, effectType){
+		//容忍
+		if(schedulingType == 2 && effectType == 'NoExecute'){
+			$("#durationDiv").show();
+		}else {
+			$("#durationDiv").hide();
+		}
+	}
+</script>

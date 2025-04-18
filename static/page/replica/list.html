@@ -1,0 +1,279 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+		<div style="margin: 5px 5px 5px 5px">
+			<form class="layui-form layui-form-pane" action="">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<select name="appEnvId" id="appEnvId">
+							<option value="">请选择环境</option>
+						</select>
+					</div>
+					<input type="hidden" name="appId" id="appId"/>
+					<div class="layui-inline">
+						<button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+		
+		<script type="text/html" id="statusBar">
+			{{#	if (d.status == 1) {    	}}
+			{{#		return '启动中' 		}}
+			{{#	} else if (d.status == 2) {	}}
+			{{#		return '成功'   		}}
+			{{#	} else if (d.status == 3) { }}
+			{{#		return '失败'   		}}
+			{{#	} else if (d.status == 4) { }}
+			{{#		return '销毁中'   		}}
+			{{#	}                     		}}
+		</script>
+        <script type="text/html" id="currentTableBar">
+			<a href="javascript:;" class="layui-font-blue" lay-event="replicaMetrics" id="replicaMetrics">副本指标</a>
+			{{#	if (d.jvmMetricsStatus && d.jvmMetricsStatus == 1) {    	}}
+				<span style="color: rgb(179, 179, 179);"> | </span>
+				<a href="javascript:;" class="layui-font-blue" lay-event="jvmMetrics">Jvm指标</a>
+			{{#	}                     										}}
+			<span style="color: rgb(179, 179, 179);"> | </span>
+			<a href="javascript:;" class="layui-font-blue dropdown-operate" data-replica-name="{{d.name}}">更多 <i class="layui-icon layui-font-12 layui-icon-down"></i></a>
+		</script>
+    </div>
+</div>
+<script>
+
+	var replicaName;
+	var envId;
+	
+    layui.use(['form', 'table', 'dropdown', 'miniPage'], function () {
+        var $ = layui.jquery,
+			layer = layui.layer,
+            form = layui.form,
+            table = layui.table,
+			dropdown = layui.dropdown,
+			miniPage = layui.miniPage,
+			appId = localStorage.getItem('appId_' + $("#userName").val());
+		
+		$("#appId").val(appId);
+		form.render('select');
+		
+        //初始化环境
+		initEnv(form, table, $, appId, dropdown, $);
+
+		// 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                },
+                where: data.field
+            }, 'data');
+
+            return false;
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+			replicaName = obj.data.name;
+			if (obj.event === 'replicaMetrics') {
+                var index = layer.open({
+                    title: '副本指标',
+                    type: 2,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['70%', '90%'],
+					offset: ['3%', '18%'],
+					content: ['page/replica/replica_metrics.html']
+                });
+            }else if (obj.event === 'jvmMetrics') {
+                var index = layer.open({
+                    title: 'Jvm指标',
+                    type: 2,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['70%', '90%'],
+					offset: ['3%', '18%'],
+					content: ['page/replica/jvm_metrics.html']
+                });
+            }
+			return false;
+        });
+    });
+	
+	function rebuild($, appId, envId, replicaName) {
+		var msg = '确定重建”' + replicaName + '“吗？';
+		layer.confirm(msg, {icon: 0, title:'提示'}, function (index) {
+			layer.close(index);
+			$.ajax({
+				url: '/app/env/replica/rebuild',
+				type: 'POST',
+				dataType: "json",
+				contentType: 'application/json;charset=UTF-8',
+				data: JSON.stringify({"replicaName": replicaName, "appId": appId, "envId": envId}),
+				success: function(data){
+					if(data.code != "000000"){
+						layer.msg(data.message, {icon: 5, shift: 6});
+						return false;
+					}
+					
+					layer.msg("重建成功", {
+						icon: 1,
+						time: 500,
+						shade: 0.01,
+						shadeClose: false}, function(){
+						layui.table.reload('currentTableId');
+					});
+				},
+				error: function(data){
+					layer.msg(data.message, {icon: 5, shift: 6});
+				}
+			});
+		});
+	}
+	
+	function initTable(table, appId, appEnvId, dropdown, $){
+		table.render({
+            elem: '#currentTableId',
+            url: '/app/env/replica/page',
+			method: 'post',
+			contentType: 'application/json;charset=UTF-8',
+			request: {
+				pageName: 'pageNum',
+				limitName: 'pageSize'
+			},
+			where: {"appId": appId, "appEnvId": appEnvId},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter'],
+			parseData: function(res){
+				redirectLogin(res.code);
+				if(res.code != '000000'){
+					return {
+					  "code": 1,
+					  "msg": res.message,
+					  "count": 0,
+					  "data": []
+					};
+				}
+				return {
+				  "code": 0,
+				  "msg": res.message,
+				  "count": res.data.itemCount,
+				  "data": res.data.items
+				};
+			},
+            cols: [[
+                {field: 'name', title: '名称'},
+				{field: 'ip', title: 'IP', width: '9%'},
+				{field: 'versionName', title: '部署版本'},
+				{field: 'branchName', title: '分支(标签)', width: '8%'},
+				{field: 'envName', title: '环境', width: '5%'},
+				{field: 'status', title: '状态', width: '6%', templet: '#statusBar'},
+				{field: 'startTime', title: '开始时间', width: '13%'},
+				{field: 'namespace', title: '命名空间',  width: '7%'},
+				{field: 'nodeName', title: '节点名称',  width: '7%'},
+                {field: 'clusterName', title: '集群名称', width: '7%'},
+                {title: '操作', toolbar: '#currentTableBar', width: '16%'}
+            ]],
+            limits: [10, 20],
+            limit: 10,
+            page: true,
+            skin: 'row',
+			even: true,
+			done: function(res, curr, count){
+				
+				//提示
+				$('#replicaMetrics').on('mouseover', function(){
+					layer.tips('<span style="color:#000;">集群需要安装Metrics Server，<a class="layui-font-blue" target="_blank" href="https://gitee.com/i512team/dbee-doc/blob/main/guide/%E5%AE%89%E8%A3%85Metrics%20Server.md">参考文档</a></span>', this, {tips:[3, '#fff'], time:1000});
+				});
+				
+				dropdown.render({
+					elem: '.dropdown-operate'
+					,trigger: 'hover'
+					,data: [{
+					  title: '查看日志'
+					  ,id: 'log'
+					}, {
+					  title: '下载日志'
+					  ,id: 'log-download'
+					}, {
+					  title: '下载yaml'
+					  ,id: 'yaml-download'
+					},{
+					  title: '终端命令'
+					  ,id: 'terminal'
+					},{
+					  title: '重建副本'
+					  ,id: 'rebuild'
+					}]
+					,click: function(data, othis){
+						var elem = $(this.elem);
+						replicaName = elem.data('replica-name');
+						envId = appEnvId;
+						var param = "appId="+ appId +"&envId="+ envId +"&replicaName="+ replicaName;
+						if (data.id === 'log') {
+							var index = layer.open({
+								title: '查看日志',
+								type: 2,
+								shade: 0.5,
+								maxmin: false,
+								shadeClose: false,
+								area: ['70%', '90%'],
+								offset: ['5%', '18%'],
+								content: ['page/replica/log.html', 'no']
+							});
+						}else if(data.id === 'log-download'){
+							$("<a>").attr("href","/app/env/replica/downloadLog?" + param)[0].click();
+						}else if(data.id === 'yaml-download'){
+							$("<a>").attr("href","/app/env/replica/downloadYaml?" + param)[0].click();
+						}else if (data.id === 'terminal') {
+							var index = layer.open({
+								title: '终端命令',
+								type: 2,
+								shade: 0.5,
+								maxmin: false,
+								shadeClose: false,
+								area: ['70%', '80%'],
+								offset: ['7%', '18%'],
+								content: ['page/replica/terminal.html', 'no']
+							});
+						}else if (data.id === 'rebuild') {
+							rebuild($, appId, appEnvId, replicaName);
+						}
+					}
+				});
+			}
+        });
+	}
+	
+	function initEnv(form, table, $, appId, dropdown, $) {
+		$.ajax({
+			url: '/app/env/search',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify({'appId': appId, 'pageSize': 1000, 'pageNum': 1}),
+			success: function(res){
+				data = res.data
+				var firstEnv = 0;
+				var opt = '';
+				for(var k in data){
+					if(k == 0){
+						firstEnv = data[k].id;
+					}
+					opt = opt.concat("<option value='"+ data[k].id +"'>"+ data[k].envName +"</option>");
+				}
+				if(opt != ''){
+					$("#appEnvId").html(opt);
+					form.render('select');
+				}
+				
+				//初始化表格
+				initTable(table, appId, firstEnv, dropdown, $);
+			},
+			error: function(data){
+				layer.msg(data.message, {icon: 5, shift: 6});
+			}
+		});
+	}
+</script>

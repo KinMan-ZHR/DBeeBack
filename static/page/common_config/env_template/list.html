@@ -1,0 +1,156 @@
+<div class="layuimini-main">
+	<script type="text/html" id="toolbarDemo">
+		<div class="layui-btn-container">
+			<button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+		</div>
+	</script>
+
+	<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+	<script type="text/html" id="currentTableBar">
+		<a href="javascript:;" class="layui-font-blue" lay-event="detail">详情</a>
+		<span style="color: rgb(179, 179, 179);"> | </span>
+		<a href="javascript:;" class="layui-font-blue" lay-event="update">修改</a>
+		<span style="color: rgb(179, 179, 179);"> | </span>
+		<a href="javascript:;" class="layui-font-blue" lay-event="delete">删除</a>
+	</script>
+</div>
+<script>
+
+	//全局变量，在子页面里使用
+	var data2;
+	
+    layui.use(['form', 'table', 'dropdown', 'miniPage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+			dropdown = layui.dropdown,
+			miniPage = layui.miniPage;
+			
+        table.render({
+            elem: '#currentTableId',
+            url: '/globalConfig/envTemplate/page',
+			method: 'post',
+			contentType: 'application/json;charset=UTF-8',
+			request: {
+				pageName: 'pageNum',
+				limitName: 'pageSize'
+			},
+			where: {"itemType": 6},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter'],
+			parseData: function(res){
+				redirectLogin(res.code);
+				if(res.code != '000000'){
+					return {
+					  "code": 1,
+					  "msg": res.message,
+					  "count": 0,
+					  "data": []
+					};
+				}
+				return {
+				  "code": 0,
+				  "msg": res.message,
+				  "count": res.data.itemCount,
+				  "data": res.data.items
+				};
+			},
+            cols: [[
+                {field: 'templateName', title: '模板名称', sort: true},
+                {field: 'envName', title: '环境名称'},
+                {field: 'tag', title: '环境标识'},
+				{field: 'deploymentOrder', title: '部署序号'},
+                {title: '操作', toolbar: '#currentTableBar', width: '13%'}
+            ]],
+            limits: [10, 20],
+            limit: 10,
+            page: true,
+            skin: 'row',
+			even: true
+        });
+		
+        /**
+         * toolbar监听事件
+         */
+        table.on('toolbar(currentTableFilter)', function (obj) {
+            if (obj.event === 'add') {  // 监听添加操作
+                var index = layer.open({
+                    title: '添加环境',
+                    type: 1,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['50%', '90%'],
+					offset: ['5%', '28%'],
+					content: miniPage.getHrefContent('page/common_config/env_template/add.html')
+                });
+            } else if (obj.event === 'delete') {  // 监听删除操作
+                var checkStatus = table.checkStatus('currentTableId')
+                    , data = checkStatus.data;
+                layer.alert(JSON.stringify(data));
+            }
+        });
+
+        table.on('tool(currentTableFilter)', function (obj) {
+			data2 = JSON.stringify({'id': obj.data.id});
+			if (obj.event === 'detail') {
+                var index = layer.open({
+                    title: '详情',
+                    type: 1,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['50%', '90%'],
+					offset: ['5%', '28%'],
+					content: miniPage.getHrefContent('page/common_config/env_template/detail.html')
+                });
+            }else if (obj.event === 'update') {
+                var index = layer.open({
+                    title: '修改',
+                    type: 1,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['50%', '90%'],
+					offset: ['5%', '28%'],
+					content: miniPage.getHrefContent('page/common_config/env_template/update.html')
+                });
+            }else if (obj.event === 'delete') {
+                doDelete($, obj.data.templateName, obj.data.id);
+            }
+			return false;
+        });
+    });
+	
+	function doDelete($, name, id) {
+		var msg = '确定删除：“' + name + '”？';
+		layer.confirm(msg, {offset: ['30%', '42%']}, function (index) {
+			layer.close(index);
+			$.ajax({
+				url: '/globalConfig/traceTemplate/delete',
+				type: 'POST',
+				dataType: "json",
+				contentType: 'application/json;charset=UTF-8',
+				data: JSON.stringify({"id": id}),
+				success: function(data){
+					if(data.code != "000000"){
+						layer.msg(data.message, {icon: 5, shift: 6});
+						return false;
+					}
+					
+					layer.msg("删除成功", {
+						icon: 1,
+						time: 500,
+						shade: 0.01,
+						shadeClose: false}, function(){
+						layui.table.reload('currentTableId');
+					});
+				},
+				error: function(data){
+					layer.msg(data.message, {icon: 5, shift: 6});
+				}
+			});
+		});
+	}
+</script>

@@ -1,0 +1,535 @@
+<style>
+	.text-value{
+		text-align: left;
+		width: 800px;
+		word-break:break-all;
+		white-space:pre-wrap;
+		cursor:auto;
+	}
+</style>
+<div class="layuimini-main">
+	<div class="layui-form layuimini-form" lay-filter="form-data">
+		<div class="layui-form-item">
+			<label class="layui-form-label">应用编号：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="id"></label>
+				<a href="javascript:;" class="layui-font-blue" style="float:right;margin-right:45px;padding-top: 9px;" id="delete">删除</a>
+				<a href="javascript:;" class="layui-font-blue" style="float:right;margin-right:15px;padding-top: 9px;" id="edit">修改</a>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">应用名称：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="appName"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">技术类型：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="techType"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">代码仓库地址：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="codeRepoPath"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">亲密应用：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="affinityAppNames"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="packageBuildTypeDiv" style="display: none">
+			<label class="layui-form-label">构建方式：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="packageBuildType"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="goVersionDiv" style="display: none">
+			<label class="layui-form-label">Go版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="goVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="nodeVersionDiv" style="display: none">
+			<label class="layui-form-label">Node版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="nodeVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="nodeImageDiv" style="display: none">
+			<label class="layui-form-label">Node镜像：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="nodeImage"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="compileTypeDiv" style="display: none">
+			<label class="layui-form-label">编译工具：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="compileType"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="npmVersionDiv" style="display: none">
+			<label class="layui-form-label">Npm版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="npmVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="pnpmVersionDiv" style="display: none">
+			<label class="layui-form-label">Pnpm版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="pnpmVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="yarnVersionDiv" style="display: none">
+			<label class="layui-form-label">Yarn版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="yarnVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="deploymentTypeDiv" style="display: none">
+			<label class="layui-form-label">部署方式：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="deploymentType"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="pythonVersionDiv" style="display: none">
+			<label class="layui-form-label">Python版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="pythonVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="pythonImageDiv" style="display: none">
+			<label class="layui-form-label">Python镜像：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="pythonImage"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="startFileDiv" style="display: none">
+			<label class="layui-form-label">启动文件：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="startFile"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="packageTargetPathDiv">
+			<label class="layui-form-label">文件路径：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="packageTargetPath"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="packageFileTypeDiv" style="display: none">
+			<label class="layui-form-label">文件类型：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="packageFileType"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="dotNetVersionDiv" style="display: none">
+			<label class="layui-form-label">.Net版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="dotNetVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="dotNetImageDiv" style="display: none">
+			<label class="layui-form-label">.Net镜像：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="dotNetImage"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" id="baseImageSourceDiv">
+			<label class="layui-form-label">基础镜像来源：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="baseImageSource"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display:none" id="baseImageVersionDiv">
+			<label class="layui-form-label">基础镜像版本：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="baseImageVersion"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display:none" id="baseImageDiv">
+			<label class="layui-form-label">基础镜像：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="baseImage"></label>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display:none" id="javaHomeDiv">
+			<label class="layui-form-label">Java安装目录：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="javaHome"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">部门：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="department"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">创建时间：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="creationTime"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">修改时间：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="updateTime"></label>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">描述：</label>
+			<div class="layui-input-block">
+				<label class="layui-form-label text-value" id="description"></label>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+    layui.use(['form', 'miniPage'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$,
+			miniPage = layui.miniPage;
+		var appId = localStorage.getItem('appId_' + $("#userName").val());
+		
+		initForm($, appId);
+
+		$('#edit').click(function(){
+			var index = layer.open({
+				title: '修改应用',
+				type: 1,
+				shade: 0.5,
+				maxmin: false,
+				shadeClose: false,
+				area: ['45%', '80%'],
+				offset: ['10%', '28%'],
+				content: miniPage.getHrefContent('page/app/update.html')
+			});
+		});
+		
+		$('#delete').click(function(){
+			doDelete($, appId);
+		});
+		
+    });
+	
+	function initForm($, appId){
+	
+		var loadIndex = 0;
+		//初始化表单数据
+		$.ajax({
+			url: '/app/query',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify({'appId': appId}),
+			beforeSend: function() {
+				loadIndex = layer.load(2);
+			},
+			success: function(res){
+				layer.close(loadIndex);
+				if(res.code != "000000"){
+					layer.msg(res.message, {icon: 5, shift: 6});
+					return false;
+				}
+				
+				if(!res.data){
+					return false;
+				}
+				
+				$("#id").text(res.data.id);
+				$("#appName").text(res.data.appName);
+				
+				var techType = '';
+				var appExtend = res.data.appExtend;
+				
+				//SpringBoot
+				if(res.data.techType == 1){
+					techType = "SpringBoot";
+					$("#javaHome").text(appExtend.javaHome);
+					$("#packageBuildTypeDiv").show();
+					$("#packageFileTypeDiv").show();
+					$("#javaHomeDiv").show();
+				//Vue
+				}else if(res.data.techType == 2){
+					techType = "Vue";
+					$("#nodeVersion").text(appExtend.nodeVersion);
+					if(res.data.appExtend.compileType == 1){
+						$("#compileType").text("Npm");
+						$("#npmVersionDiv").show();
+						$("#npmVersion").text(res.data.appExtend.npmVersion);
+					}else if(res.data.appExtend.compileType == 2){
+						$("#compileType").text("Pnpm");
+						$("#pnpmVersionDiv").show();
+						$("#pnpmVersion").text(res.data.appExtend.pnpmVersion);
+					}else if(res.data.appExtend.compileType == 3){
+						$("#compileType").text("Yarn");
+						$("#yarnVersionDiv").show();
+						$("#yarnVersion").text(res.data.appExtend.yarnVersion);
+					}else{// 兼容之前创建的应用
+						$("#compileType").text("Npm");
+						$("#npmVersionDiv").show();
+						$("#npmVersion").text(res.data.appExtend.npmVersion);
+					}
+					$("#nodeVersionDiv").show();
+					$("#compileTypeDiv").show();
+				//React
+				}else if(res.data.techType == 3){
+					techType = "React";
+					$("#nodeVersion").text(res.data.appExtend.nodeVersion);
+					if(res.data.appExtend.compileType == 1){
+						$("#compileType").text("Npm");
+						$("#npmVersionDiv").show();
+						$("#npmVersion").text(res.data.appExtend.npmVersion);
+					}else if(res.data.appExtend.compileType == 2){
+						$("#compileType").text("Pnpm");
+						$("#pnpmVersionDiv").show();
+						$("#pnpmVersion").text(res.data.appExtend.pnpmVersion);
+					}else if(res.data.appExtend.compileType == 3){
+						$("#compileType").text("Yarn");
+						$("#yarnVersionDiv").show();
+						$("#yarnVersion").text(res.data.appExtend.yarnVersion);
+					}else{// 兼容之前创建的应用
+						$("#compileType").text("Npm");
+						$("#npmVersionDiv").show();
+						$("#npmVersion").text(res.data.appExtend.npmVersion);
+					}
+					$("#nodeVersionDiv").show();
+					$("#compileTypeDiv").show();
+				//Nodejs
+				}else if(res.data.techType == 4){
+					techType = "Nodejs";
+					$("#baseImageDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+					$("#nodeVersion").text(res.data.appExtend.nodeVersion);
+					$("#nodeVersionDiv").show();
+					$("#nodeImage").text(res.data.appExtend.nodeImage);
+					$("#nodeImageDiv").show();
+					$("#startFileDiv").show();
+					$("#startFile").text(res.data.appExtend.startFile);
+				//Html
+				}else if(res.data.techType == 5){
+					techType = "Html";
+					$("#baseImageDiv").show();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+				//Go
+				}else if(res.data.techType == 6){
+					techType = "Go";
+					$("#baseImageDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+					$("#goVersionDiv").show();
+					$("#goVersion").text(res.data.appExtend.goVersion);
+				//Python
+				}else if(res.data.techType == 7){
+					techType = "Python";
+					$("#baseImageDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+					$("#pythonVersionDiv").show();
+					$("#pythonVersion").text(res.data.appExtend.pythonVersion);
+					$("#startFileDiv").show();
+					$("#startFile").text(res.data.appExtend.startFile);
+					$("#pythonImage").text(res.data.appExtend.pythonImage);
+					$("#pythonImageDiv").show();
+				//Flask
+				}else if(res.data.techType == 8){
+					techType = "Flask";
+					$("#baseImageDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+					$("#pythonVersionDiv").show();
+					$("#pythonVersion").text(res.data.appExtend.pythonVersion);
+					$("#startFileDiv").show();
+					$("#startFile").text(res.data.appExtend.startFile);
+					$("#pythonImage").text(res.data.appExtend.pythonImage);
+					$("#pythonImageDiv").show();
+				//Django
+				}else if(res.data.techType == 9){
+					techType = "Django";
+					$("#baseImageDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#packageTargetPathDiv").hide();
+					$("#pythonVersionDiv").show();
+					$("#pythonVersion").text(res.data.appExtend.pythonVersion);
+					$("#startFileDiv").show();
+					$("#startFile").text(res.data.appExtend.startFile);
+					$("#pythonImage").text(res.data.appExtend.pythonImage);
+					$("#pythonImageDiv").show();
+				//Nuxt
+				}else if(res.data.techType == 10){
+					techType = "Nuxt";
+					$("#nodeVersion").text(res.data.appExtend.nodeVersion);
+					$("#nodeVersionDiv").show();
+					showCompileType($, res.data);
+					showDeploymentType($, res.data);
+					$("#packageTargetPathDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#nodeImage").text(res.data.appExtend.nodeImage);
+					$("#nodeImageDiv").show();
+				//Next
+				}else if(res.data.techType == 11){
+					techType = "Next";
+					$("#nodeVersion").text(appExtend.nodeVersion);
+					$("#nodeVersionDiv").show();
+					showCompileType($, res.data);
+					showDeploymentType($, res.data);
+					$("#packageTargetPathDiv").hide();
+					$("#baseImageSourceDiv").hide();
+					$("#nodeImage").text(appExtend.nodeImage);
+					$("#nodeImageDiv").show();
+				//.Net
+				}else if(res.data.techType == 12){
+					techType = ".Net";
+					$("#dotNetVersion").text(appExtend.dotNetVersion);
+					$("#dotNetVersionDiv").show();
+					$("#dotNetImage").text(appExtend.dotNetImage);
+					$("#dotNetImageDiv").show();
+					$("#packageTargetPathDiv").hide();
+					$("#baseImageSourceDiv").hide();
+				}
+				
+				$("#techType").text(techType);
+				if(res.data.affinityAppNames){
+					$("#affinityAppNames").text(res.data.affinityAppNames);
+				}else{
+					$("#affinityAppNames").text('');
+				}
+				$("#codeRepoPath").text(res.data.codeRepoPath);
+				$("#creationTime").text(res.data.creationTime);
+				$("#updateTime").text(res.data.updateTime);
+				$("#description").text(res.data.description);
+				$("#baseImageVersion").text('v' + res.data.baseImageVersion);
+				$("#baseImage").text(res.data.baseImage);
+				
+				if(res.data.baseImageSource == 1){
+					$("#baseImageSource").text("版本号");
+					$("#baseImageVersionDiv").show();
+				}else if(res.data.baseImageSource == 2){
+					$("#baseImageSource").text("自定义");
+					$("#baseImageDiv").show();
+				}
+				var department = res.data.firstDepartment;
+				if(res.data.secondDepartment != ''){
+					department += ' - ';
+					department += res.data.secondDepartment;
+				}
+				if(res.data.thirdDepartment != ''){
+					department += ' - ';
+					department += res.data.thirdDepartment;
+				}
+				$("#department").text(department);
+				
+				var packageBuildType = '';
+				if(typeof(res.data.appExtend) == "undefined"){
+					packageBuildType = '';
+				}else if(typeof(res.data.appExtend.packageBuildType) == "undefined"){
+					packageBuildType = '';
+				}else if(res.data.appExtend.packageBuildType == 1){
+					packageBuildType = "Maven";
+				}else if(res.data.appExtend.packageBuildType == 2){
+					packageBuildType = "Gradle";
+				}
+				$("#packageBuildType").text(packageBuildType);
+				
+				var packageFileType = '';
+				if(typeof(res.data.appExtend) == "undefined"){
+					packageBuildType = '';
+				}else if(res.data.appExtend.packageFileType == 1){
+					packageFileType = "Jar";
+				}else if(res.data.appExtend.packageFileType == 2){
+					packageFileType = "War";
+				}else if(res.data.appExtend.packageFileType == 3){
+					packageFileType = "Zip";
+				}
+				$("#packageFileType").text(packageFileType);
+				var packageTargetPath = '';
+				if(typeof(res.data.appExtend) == "undefined"){
+					packageTargetPath = '';
+				}else {
+					packageTargetPath = res.data.appExtend.packageTargetPath;
+				}
+				$("#packageTargetPath").text(packageTargetPath);
+			},
+			error: function(res){
+				layer.close(loadIndex);
+				layer.msg(res.message, {icon: 5, shift: 6});
+			}
+		});
+	}
+	
+	function showCompileType($, data){
+		if(data.appExtend.compileType == 1){
+			$("#compileType").text("Npm");
+			$("#npmVersionDiv").show();
+			$("#npmVersion").text(data.appExtend.npmVersion);
+		}else if(data.appExtend.compileType == 2){
+			$("#compileType").text("Pnpm");
+			$("#pnpmVersionDiv").show();
+			$("#pnpmVersion").text(data.appExtend.pnpmVersion);
+		}else if(data.appExtend.compileType == 3){
+			$("#compileType").text("Yarn");
+			$("#yarnVersionDiv").show();
+			$("#yarnVersion").text(data.appExtend.yarnVersion);
+		}
+		$("#compileTypeDiv").show();
+	}
+	
+	function showDeploymentType($, data){
+		if(data.appExtend.deploymentType == 1){
+			$("#deploymentType").text("动态部署");
+		}else if(data.appExtend.deploymentType == 2){
+			$("#deploymentType").text("静态部署");
+		}
+		$("#deploymentTypeDiv").show();
+	}
+	
+	function doDelete($, id) {
+		var msg = "确定删除？";
+		layer.confirm(msg, {shade: 0.5,
+			maxmin: false,
+			shadeClose: false,
+			offset: ['35%', '40%'],
+		}, function (index) {
+			layer.close(index);
+			$.ajax({
+				url: '/app/delete',
+				type: 'POST',
+				dataType: "json",
+				contentType: 'application/json;charset=UTF-8',
+				data: JSON.stringify({"appId": id}),
+				success: function(data){
+					if(data.code != "000000"){
+						layer.msg(data.message, {icon: 5, shift: 6});
+						return false;
+					}
+					
+					//清除当前应用的所有缓存
+					var length = localStorage.length;
+					for(var i = 0; i < length; i++){
+						var key = localStorage.key(0);
+						if(localStorage.getItem(key) == id){
+							localStorage.removeItem(key);
+						}
+					}
+					
+					layer.msg("删除成功", {
+						icon: 1,
+						time: 500,
+						shade: 0.01,
+						shadeClose: false}, function(){
+							window.location = '/index.html';
+						});
+				},
+				error: function(data){
+					layer.msg(data.message, {icon: 5, shift: 6});
+				}
+			});
+		});
+	}
+</script>

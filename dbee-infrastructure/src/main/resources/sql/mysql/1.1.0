@@ -1,0 +1,27 @@
+alter table deployment_detail add column deployment_thread varchar (64) default null comment '部署线程' after end_time;
+alter table affinity_toleration modify column open_status tinyint default 1 comment '启用状态，0：禁用，1：启用';
+alter table app_member modify column login_name varchar (32) default null comment '登录名';
+create table env_ext (
+	id bigint primary key auto_increment not null comment '主键id',
+	app_id bigint default null comment '应用编号',
+	env_id bigint default null comment '环境编号',
+	ex_type tinyint default null comment '扩展类型，1：技术类型，2：亲和容忍，3：健康检查',
+	ext text default null comment '扩展内容，json结构',
+	creation_time datetime default current_timestamp comment '创建时间',
+	update_time datetime default current_timestamp on update current_timestamp comment '修改时间',
+	deletion_status tinyint default 0 comment '删除状态，0：未删除，1：已删除'
+)comment '环境扩展';
+create index env_ext_env_id on env_ext(env_id);
+create table log_record (
+	id bigint primary key auto_increment not null comment '主键id',
+	app_id bigint default null comment '应用编号',
+	biz_id bigint default null comment '业务编号',
+	log_type tinyint default null comment '日志类型，1：构建日志，2：部署日志',
+	content text default null comment '日志内容',
+	creation_time datetime default current_timestamp comment '创建时间',
+	update_time datetime default current_timestamp on update current_timestamp comment '修改时间',
+	deletion_status tinyint default 0 comment '删除状态，0：未删除，1：已删除'
+)comment '日志记录';
+create index log_record_biz_id on log_record(biz_id);
+create index log_record_update_time on log_record(update_time);
+insert into global_config(item_type, item_value, remark, creation_time, update_time, deletion_status) values (8, now(), null, now(), now(), 0);

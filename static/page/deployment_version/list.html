@@ -1,0 +1,209 @@
+<div class="layuimini-container">
+    <div class="layuimini-main">
+		<div style="margin: 5px 5px 5px 5px">
+			<form class="layui-form layui-form-pane" action="">
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<select name="branchName" id="branchName" lay-search>
+							<option value="">请输入或选择分支</option>
+						</select>
+					</div>
+					<input type="hidden" name="appId" id="appId"/>
+					<div class="layui-inline">
+						<button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+					</div>
+				</div>
+			</form>
+		</div>
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+		<script type="text/html" id="currentTableBar">
+			<a href="javascript:;" class="layui-font-blue" lay-event="log">日志</a>
+			<span style="color: rgb(179, 179, 179);"> | </span>
+			<a href="javascript:;" class="layui-font-blue" lay-event="delete">删除</a>
+        </script>
+		<script type="text/html" id="statusBar">
+		    {{#	if (d.status == 0) {  		}}
+			{{#		return '构建中'			}}
+			{{#	} else if (d.status == 1) {	}}
+			{{#		return '构建成功'   	}}
+			{{#	} else if (d.status == 2) {	}}
+			{{#		return '构建失败'   	}}
+			{{#	}                     		}}
+		</script>
+    </div>
+</div>
+<script>
+	
+	var id;
+	
+    layui.use(['form', 'table', 'miniPage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+			miniPage = layui.miniPage,
+			appId = localStorage.getItem('appId_' + $("#userName").val());
+		
+		$("#appId").val(appId);
+		form.render('select');
+		
+        //初始化环境
+		initApp(table, $, appId);
+
+		initBranch(form, $, appId);
+
+		// 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                },
+                where: data.field
+            }, 'data');
+
+            return false;
+        });
+		
+		table.on('tool(currentTableFilter)', function (obj) {
+            if (obj.event === 'log') {
+				id = obj.data.id;
+                var index = layer.open({
+                    title: '日志',
+                    type: 2,
+                    shade: 0.5,
+                    maxmin: false,
+                    shadeClose: false,
+                    area: ['70%', '80%'],
+					offset: ['7%', '18%'],
+                    content: ['page/deployment_version/log.html', 'no']
+                });
+			}if (obj.event === 'delete') {
+                doDelete($, obj.data.id, obj.data.versionName, appId);
+            }
+			return false;
+        });
+    });
+
+	function initTable(table, appId, envName){
+		table.render({
+            elem: '#currentTableId',
+            url: '/app/deployment/version/page',
+			method: 'post',
+			contentType: 'application/json;charset=UTF-8',
+			request: {
+				pageName: 'pageNum',
+				limitName: 'pageSize'
+			},
+			where: {"appId": appId},
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter'],
+			parseData: function(res){
+				redirectLogin(res.code);
+				if(res.code != '000000'){
+					return {
+					  "code": 1,
+					  "msg": res.message,
+					  "count": 0,
+					  "data": []
+					};
+				}
+				return {
+				  "code": 0,
+				  "msg": res.message,
+				  "count": res.data.itemCount,
+				  "data": res.data.items
+				};
+			},
+            cols: [[
+				{field: 'versionName', title: '版本号', width: '25%'},
+                {field: 'branchName', title: '分支(标签)'},
+				{field: 'envName', title: '环境名称', hide: envName},
+				{field: 'status', title: '状态', width: '14%', templet: '#statusBar'},
+				{field: 'creationTime', title: '构建开始时间', width: '16%'},
+				{field: 'updateTime', title: '构建结束时间',  width: '16%'},
+				{title: '操作', toolbar: '#currentTableBar'}
+			]],
+            limits: [10, 20],
+            limit: 10,
+            page: true,
+            skin: 'row',
+			even: true
+        });
+	}
+	
+	function initApp(table, $, appId){
+		$.ajax({
+			url: '/app/query',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify({'appId': appId}),
+			success: function(res){
+				if(!res.data || !res.data.techType){
+					initTable(table, appId, true);
+				//只有Vue、React应用，才展示环境名称列
+				}else if(res.data.techType == 2 || res.data.techType == 3){
+					initTable(table, appId, false);
+				}else{
+					initTable(table, appId, true);
+				}
+			},
+			error: function(data){
+				layer.msg(data.message, {icon: 5, shift: 6});
+			}
+		});
+	}
+	
+	function initBranch(form, $, appId){
+		$.ajax({
+			url: '/app/branch/search',
+			type: 'POST',
+			dataType: "json",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify({'appId': appId}),
+			success: function(res){
+				data = res.data
+				var opt = '';
+				for(var k in data){
+					opt = opt.concat("<option value='"+ data[k].branchName +"'>"+ data[k].branchName +"</option>");
+				}
+				$("#branchName").append(opt);
+				form.render('select');
+			},
+			error: function(data){
+				layer.msg(data.message, {icon: 5, shift: 6});
+			}
+		});
+	}
+	
+	//删除
+	function doDelete($, id, name, appId) {
+		var msg = "确定要删除“" + name + "”吗？";
+		layer.confirm(msg, {title: '提示'}, function (index) {
+			layer.close(index);
+			$.ajax({
+				url: '/app/deployment/version/delete',
+				type: 'POST',
+				dataType: "json",
+				contentType: 'application/json;charset=UTF-8',
+				data: JSON.stringify({"appId": appId, "deploymentVersionId": id}),
+				success: function(data){
+					if(data.code != "000000"){
+						layer.msg(data.message, {icon: 5, shift: 6});
+						return false;
+					}
+					
+					layer.msg("删除成功", {
+						icon: 1,
+						time: 700,
+						shade: 0.01,
+						shadeClose: false}, function(){
+						layui.table.reload('currentTableId');
+					});
+				},
+				error: function(data){
+					layer.msg(data.message, {icon: 5, shift: 6});
+				}
+			});
+		});
+	}
+</script>
