@@ -22,7 +22,7 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
  */
 @Component
 @ServerEndpoint("/replica/log/{appId}/{envId}/{replicaname}/{logintoken}")
-public class ReplicaLogWebSocket extends AbstracWebSocket{
+public class ReplicaLogWebSocket extends AbstractWebSocket {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReplicaLogWebSocket.class);
 

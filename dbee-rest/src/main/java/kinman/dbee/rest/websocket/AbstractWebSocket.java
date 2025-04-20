@@ -16,7 +16,7 @@ import io.fabric8.kubernetes.client.KubernetesClientBuilder;
  * 
  * WebSocket的基础功能
  */
-public abstract class AbstracWebSocket {
+public abstract class AbstractWebSocket {
 
 	public SSHContext sshContext(String loginToken, String appId, String envId, String replicaName) {
 		SysUserApplicationService sysUserApplicationService = SpringBeanContext
