@@ -11,7 +11,7 @@
 server.port: 8100
 
 #系统数据文件位置，默认为dbee的安装目录
-data.path: /usr/dbee
+#data.path: /usr/dbee
 
 #系统日志文件位置，默认为dbee的安装目录
 log.path: /tmp/log
