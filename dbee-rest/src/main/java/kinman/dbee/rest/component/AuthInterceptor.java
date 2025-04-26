@@ -20,6 +20,8 @@ import kinman.dbee.infrastructure.annotation.AccessOnlyAdmin;
 import kinman.dbee.infrastructure.strategy.login.dto.LoginUser;
 import kinman.dbee.infrastructure.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,6 +31,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * 权限拦截
  *
  */
+@Component("newAuthInterceptor")
 public class AuthInterceptor implements HandlerInterceptor {
 
 	@Autowired

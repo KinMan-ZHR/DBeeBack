@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>kinman</groupId>
 		<artifactId>dbee</artifactId>
-		<version>1.6.0</version>
+		<version>0.0.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>dbee-agent</artifactId>

@@ -12,16 +12,6 @@ Dbee是一个轻量级、简单易用的云应用管理平台，具有多云和�
 * 支持日志收集
 * 支持链路追踪
 
-## 架构
- ![Image text](./static/images/architecture.jpg)
-
-## 项目地址
-
-* [GitHub](https://github.com/512team/dbee)
-* [Gitee](https://gitee.com/i512team/dbee)
-* [演示1](http://dbee-demo1.512.team)
-* [演示2](http://dbee-demo2.512.team)
-
 ## 快速开始
 
 1.环境要求
@@ -29,10 +19,6 @@ Dbee是一个轻量级、简单易用的云应用管理平台，具有多云和�
 | Java | kubernetes | Harbor |
 | :----: | :----: | :----: |
 | >=8 | [1.18, 1.30] | >=2.0.0 |
-
-2.下载安装文件
-
-[最新稳定版](https://gitee.com/i512team/dbee/releases/download/v1.6.0/dbee-v1.6.0-bin.tar.gz)
 
 3.解压
 
@@ -62,35 +48,12 @@ $  bin/dbee-start.sh
 
 6.在浏览器里输入地址：`http://127.0.0.1:8100`，并输入账号/密码：admin/admin，登录之后如下图所示：
 
- ![Image text](./static/images/home.png)
 
 7.最后，关闭服务
 
 ```bash
 $  bin/dbee-stop.sh
 ```
-
-## 了解更多
-
-* [操作手册](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C.md)
-
-* [配置文件](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.md)
-
-* [多环境标识](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.md)
-
-* [日志收集](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86.md)
-
-* [链路追踪](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA.md)
-
-* [打包说明](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E6%89%93%E5%8C%85%E8%AF%B4%E6%98%8E.md)
-
-* [运行源码](https://gitee.com/i512team/dbee-doc/blob/main/guide/%E8%BF%90%E8%A1%8C%E6%BA%90%E7%A0%81.md)
-
-## 社区交流
-
-感谢您的支持和关注，如想了解更多内容，欢迎加入如下群聊，如果二维码失效，也可加微信(tiandizhiguai)，备注：dbee。
-
- ![Image text](https://512.team/img/weixin.png)
 
 ## 开源许可
 

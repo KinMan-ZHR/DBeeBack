@@ -6,7 +6,7 @@
 
 	<groupId>org.dbee</groupId>
 	<artifactId>app-tmp</artifactId>
-	<version>1.6.0</version>
+	<version>0.0.1</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
