@@ -2,7 +2,6 @@ package kinman.dbee.api.enums;
 
 /**
  * 事件类型
- * @author Dahi
  */
 public enum EventTypeEnum {
 

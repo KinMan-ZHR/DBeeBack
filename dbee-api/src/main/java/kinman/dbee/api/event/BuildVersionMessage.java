@@ -2,7 +2,6 @@ package kinman.dbee.api.event;
 
 /**
  * 构建版本通知模型
- * 
  *
  */
 public class BuildVersionMessage {
@@ -25,7 +24,7 @@ public class BuildVersionMessage {
 	/**
 	 * 版本名称
 	 */
-	private String verionName;
+	private String versionName;
 
 	/**
 	 * 状态
@@ -60,12 +59,12 @@ public class BuildVersionMessage {
 		this.appName = appName;
 	}
 
-	public String getVerionName() {
-		return verionName;
+	public String getVersionName() {
+		return versionName;
 	}
 
-	public void setVerionName(String verionName) {
-		this.verionName = verionName;
+	public void setVersionName(String versionName) {
+		this.versionName = versionName;
 	}
 
 	public Integer getStatus() {

@@ -2,7 +2,7 @@ package kinman.dbee.api.enums;
 
 /**
  * 指标类型枚举
- * 这里好像是copy的agent中的类
+ * copy的agent中的类
  */
 public enum MetricsTypeEnum {
 

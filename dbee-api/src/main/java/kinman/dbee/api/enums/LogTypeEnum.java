@@ -2,8 +2,7 @@ package kinman.dbee.api.enums;
 
 /**
  * 日志类型
- * 
- * @author Dahi
+ *
  */
 public enum LogTypeEnum {
 

@@ -2,8 +2,6 @@ package kinman.dbee.api.enums;
 
 /**
  *  用户来源
- * @author Dahai
- *  2021-12-4 20:20:25
  */
 public enum RegisteredSourceEnum {
 

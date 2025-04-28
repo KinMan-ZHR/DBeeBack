@@ -176,7 +176,7 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		message.setBranchName(context.getBranchName());
 		message.setSubmitter(context.getSubmitter());
 		message.setStatus(status);
-		message.setVerionName(context.getVersionName());
+		message.setVersionName(context.getVersionName());
 
 		EventResponse<BuildVersionMessage> response = new EventResponse<>();
 		response.setEventCode(EventTypeEnum.BUILD_VERSION.getCode());
@@ -276,7 +276,7 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		message.setSubmitter(context.getSubmitter());
 		message.setApprover(context.getApprover());
 		message.setStatus(status.getCode());
-		message.setVerionName(context.getVersionName());
+		message.setVersionName(context.getVersionName());
 
 		EventResponse<DeploymentMessage> response = new EventResponse<>();
 		response.setEventCode(EventTypeEnum.DEPLOY_ENV.getCode());

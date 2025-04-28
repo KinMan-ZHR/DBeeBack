@@ -2,9 +2,7 @@ package kinman.dbee.api.enums;
 
 /**
  * 构建版本状态
- * 
- * @author Dahai
- * @date 2022-8-13 17:12:50
+ *
  */
 public enum BuildStatusEnum {
 

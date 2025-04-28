@@ -134,7 +134,7 @@ public class ClusterRest extends AbstractRest {
 	/**
 	 * 删除
 	 * 
-	 * @param clusterUpdateParam 删除服务器集群参数
+	 * @param clusterDeletionParam 删除服务器集群参数
 	 * @return 无
 	 */
 	@AccessOnlyAdmin
@@ -146,7 +146,7 @@ public class ClusterRest extends AbstractRest {
 	/**
 	 * 开启日志收集
 	 * 
-	 * @param logCollectorParam 日志收集器参数
+	 * @param logSwitchParam 日志收集器参数
 	 * @return 无
 	 */
 	@AccessOnlyAdmin
@@ -158,7 +158,7 @@ public class ClusterRest extends AbstractRest {
 	/**
 	 * 关闭日志收集
 	 * 
-	 * @param logCollectorParam 日志收集器参数
+	 * @param logSwitchParam 日志收集器参数
 	 * @return 无
 	 */
 	@AccessOnlyAdmin
@@ -170,7 +170,7 @@ public class ClusterRest extends AbstractRest {
 	/**
 	 * 查询日志收集器状态
 	 * 
-	 * @param logCollectorParam 日志收集器参数
+	 * @param logSwitchParam 日志收集器参数
 	 * @return 日志收集器状态
 	 */
 	@AccessOnlyAdmin

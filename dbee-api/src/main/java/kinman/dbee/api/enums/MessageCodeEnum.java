@@ -1,9 +1,8 @@
 package kinman.dbee.api.enums;
 
 public enum MessageCodeEnum {
-	
+
 	SUCCESS("000000", "成功"),
-	
 	INVALID_PARAM("200000", "非法的参数"),
 	FAILURE("100000", "操作失败，请查看详细日志信息"),
 	AUTH_FAILURE("200000", "认证失败"),
