@@ -33,9 +33,17 @@ import org.gitlab4j.api.models.Tag;
 import org.gitlab4j.api.models.TreeItem;
 import org.gitlab4j.api.models.TreeItem.Type;
 
+
 /**
- * 
- * GitLab代码仓库
+ * GitLab代码仓库操作策略实现。
+ * <p>
+ * 此类负责通过 GitLab API (使用 gitlab4j-api 库) 与 GitLab 代码仓库进行交互，
+ * 提供了下载、合并、创建、删除分支/标签以及查询列表等功能。
+ * 它是 {@link CodeRepoStrategy} 策略模式的一个具体实现，用于 dbee 部署平台。
+ * </p>
+ *
+ * @see CodeRepoStrategy
+ * @see GitLabApi
  */
 public class GitLabCodeRepoStrategy extends CodeRepoStrategy {
 
@@ -43,9 +51,8 @@ public class GitLabCodeRepoStrategy extends CodeRepoStrategy {
 	public boolean doDownloadBranch(DeploymentContext context) {
 		String appId = context.getApp().getCodeRepoPath();
 		String branchName = context.getBranchName();
-		GitLabApi gitLabApi = gitLabApi(context.getGlobalConfigAgg().getCodeRepo());
-		logger.info("Start to download branch");
-		try {
+		try (GitLabApi gitLabApi = gitLabApi(context.getGlobalConfigAgg().getCodeRepo())) {
+			logger.info("Start to download branch");
 			Project project = gitLabApi.getProjectApi().getProject(appId);
 			if (project == null) {
 				logger.warn("The project does not exist, appid is {}", appId);
@@ -59,9 +66,9 @@ public class GitLabCodeRepoStrategy extends CodeRepoStrategy {
 				gitLabApi.close();
 				return false;
 			}
-			
+
 			context.setLocalPathOfBranch(localPathOfBranch);
-			
+
 			List<TreeItem> trees = gitLabApi.getRepositoryApi().getTree(appId, null, branchName, true);
 			for (TreeItem tree : trees) {
 				File file = new File(localPathOfBranch + tree.getPath());
@@ -71,9 +78,9 @@ public class GitLabCodeRepoStrategy extends CodeRepoStrategy {
 					}
 					byte[] buffer = new byte[1024 * 1024];
 					int length = 0;
-					try(InputStream inputStream = gitLabApi.getRepositoryFileApi().getRawFile(appId, branchName,
+					try (InputStream inputStream = gitLabApi.getRepositoryFileApi().getRawFile(appId, branchName,
 							tree.getPath());
-							FileOutputStream outStream = new FileOutputStream(file)){
+						 FileOutputStream outStream = new FileOutputStream(file)) {
 						while ((length = inputStream.read(buffer)) != -1) {
 							outStream.write(buffer, 0, length);
 						}
@@ -85,8 +92,6 @@ public class GitLabCodeRepoStrategy extends CodeRepoStrategy {
 		} catch (Exception e) {
 			logger.error("Failed to download branch", e);
 			return false;
-		} finally {
-			gitLabApi.close();
 		}
 		logger.info("End to download branch");
 		return true;

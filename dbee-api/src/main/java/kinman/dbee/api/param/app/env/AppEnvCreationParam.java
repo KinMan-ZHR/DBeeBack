@@ -72,7 +72,7 @@ public class AppEnvCreationParam implements Serializable {
 	/**
 	 * 事件通知地址，格式如：http(s)://notify_server:port/receive
 	 */
-	private String eventNofigyUrl;
+	private String eventNotifyUrl;
 
 	/**
 	 * 是否需要部署审批，0：否，1：是
@@ -174,12 +174,12 @@ public class AppEnvCreationParam implements Serializable {
 		this.minorPorts = minorPorts;
 	}
 
-	public String getEventNofigyUrl() {
-		return eventNofigyUrl;
+	public String getEventNotifyUrl() {
+		return eventNotifyUrl;
 	}
 
-	public void setEventNofigyUrl(String eventNofigyUrl) {
-		this.eventNofigyUrl = eventNofigyUrl;
+	public void setEventNotifyUrl(String eventNotifyUrl) {
+		this.eventNotifyUrl = eventNotifyUrl;
 	}
 
 	public Integer getMaxReplicas() {

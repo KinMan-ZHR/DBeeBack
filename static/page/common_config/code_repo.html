@@ -7,6 +7,7 @@
 					<option value="">请选择</option>
 					<option value="GitLab">GitLab</option>
 					<option value="Codeup">Codeup(阿里云)</option>
+					<option value="GitHub">GitHub</option>
 				</select>
 			</div>
 		</div>
@@ -68,6 +69,43 @@
 			</div>
 		</div>
 		<!-- Codeup end -->
+
+		<!-- github start -->
+		<div class="layui-form-item" style="display: none" id="githubUrlDiv">
+			<label class="layui-form-label required">仓库地址</label>
+			<div class="layui-input-block">
+				<input type="text" name="github.url" placeholder="如：https://github.com" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="githubAuthTypeDiv">
+			<label class="layui-form-label required">认证方式</label>
+			<div class="layui-input-block">
+				<select name="github.authType" lay-filter="authType" id="authType">
+					<option value="">请选择</option>
+					<option value="1">令牌认证</option>
+					<option value="2">账号认证</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="githubAuthTokenDiv">
+			<label class="layui-form-label required">认证令牌</label>
+			<div class="layui-input-block">
+				<input type="text" name="github.authToken" placeholder="请输入认证令牌" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="githubAuthNameDiv">
+			<label class="layui-form-label required">认证名称</label>
+			<div class="layui-input-block">
+				<input type="text" name="github.authName" placeholder="请输入认证名称" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item" style="display: none" id="githubAuthPasswordDiv">
+			<label class="layui-form-label required">认证密码</label>
+			<div class="layui-input-block">
+				<input type="password" name="github.authPassword" placeholder="请输入认证密码" autocomplete="off" class="layui-input">
+			</div>
+		</div>
+		<!-- github end -->
 		
 		<div class="layui-form-item">
 			<div class="layui-input-block">

@@ -242,6 +242,8 @@ public class GlobalConfigAgg implements Serializable {
 
 		private static final long serialVersionUID = 1L;
 
+		private GitHub gitHub;
+
 		private String type;
 
 		private GitLab gitLab;
@@ -254,6 +256,14 @@ public class GlobalConfigAgg implements Serializable {
 
 		public void setType(String type) {
 			this.type = type;
+		}
+
+		public GitHub getGitHub() {
+			return gitHub;
+		}
+
+		public void setGitHub(GitHub gitHub) {
+			this.gitHub = gitHub;
 		}
 
 		public GitLab getGitLab() {
@@ -297,6 +307,59 @@ public class GlobalConfigAgg implements Serializable {
 			}
 
 			public void setAuthType(Integer authType) {
+				this.authType = authType;
+			}
+
+			public String getAuthToken() {
+				return authToken;
+			}
+
+			public void setAuthToken(String authToken) {
+				this.authToken = authToken;
+			}
+
+			public String getAuthName() {
+				return authName;
+			}
+
+			public void setAuthName(String authName) {
+				this.authName = authName;
+			}
+
+			public String getAuthPassword() {
+				return authPassword;
+			}
+
+			public void setAuthPassword(String authPassword) {
+				this.authPassword = authPassword;
+			}
+		}
+
+		public static class GitHub {
+
+			private String url;
+
+			private String authType;
+
+			private String authToken;
+
+			private String authName;
+
+			private String authPassword;
+
+			public String getUrl() {
+				return url;
+			}
+
+			public void setUrl(String url) {
+				this.url = url;
+			}
+
+			public String getAuthType() {
+				return authType;
+			}
+
+			public void setAuthType(String authType) {
 				this.authType = authType;
 			}
 

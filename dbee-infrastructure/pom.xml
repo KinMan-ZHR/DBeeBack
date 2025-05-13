@@ -62,6 +62,10 @@
 			<artifactId>gitlab4j-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.kohsuke</groupId>
+			<artifactId>github-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.google.cloud.tools</groupId>
 			<artifactId>jib-core</artifactId>
 			<exclusions>
@@ -109,13 +113,18 @@
 			<artifactId>cas-client-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.github.biezhi</groupId>
+			<groupId>io.gitHub.biezhi</groupId>
 			<artifactId>TinyPinyin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.aliyun</groupId>
 			<artifactId>alibabacloud-devops20210625</artifactId>
 			<version>4.0.38</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jgit</groupId>
+			<artifactId>org.eclipse.jgit</artifactId>
+			<version>5.11.0.202103091610-r</version>
 		</dependency>
 	</dependencies>
 	<build>

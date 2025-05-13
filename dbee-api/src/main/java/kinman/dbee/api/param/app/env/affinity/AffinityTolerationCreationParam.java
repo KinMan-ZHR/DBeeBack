@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 /**
  * 添加亲和容忍配置参数模型
- * 
- * @author Dahai 2023-03-22
  */
 public class AffinityTolerationCreationParam implements Serializable {
 
