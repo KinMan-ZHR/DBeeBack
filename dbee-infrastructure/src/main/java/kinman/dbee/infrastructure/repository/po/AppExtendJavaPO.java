@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
-@TableName("APP_EXTEND_JAVA")
+@TableName("app_extend_java")
 public class AppExtendJavaPO extends AppExtendPO {
 
 	private static final long serialVersionUID = 1L;

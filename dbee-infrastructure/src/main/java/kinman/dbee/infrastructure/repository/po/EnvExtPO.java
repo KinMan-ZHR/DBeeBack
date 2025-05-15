@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 环境扩展
  */
-@TableName("ENV_EXT")
+@TableName("env_ext")
 public class EnvExtPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

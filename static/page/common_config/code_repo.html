@@ -7,7 +7,6 @@
 					<option value="">请选择</option>
 					<option value="GitLab">GitLab</option>
 					<option value="Codeup">Codeup(阿里云)</option>
-					<option value="GitHub">GitHub</option>
 				</select>
 			</div>
 		</div>
@@ -69,43 +68,6 @@
 			</div>
 		</div>
 		<!-- Codeup end -->
-
-		<!-- github start -->
-		<div class="layui-form-item" style="display: none" id="githubUrlDiv">
-			<label class="layui-form-label required">仓库地址</label>
-			<div class="layui-input-block">
-				<input type="text" name="github.url" placeholder="如：https://github.com" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-form-item" style="display: none" id="githubAuthTypeDiv">
-			<label class="layui-form-label required">认证方式</label>
-			<div class="layui-input-block">
-				<select name="github.authType" lay-filter="authType" id="authType">
-					<option value="">请选择</option>
-					<option value="1">令牌认证</option>
-					<option value="2">账号认证</option>
-				</select>
-			</div>
-		</div>
-		<div class="layui-form-item" style="display: none" id="githubAuthTokenDiv">
-			<label class="layui-form-label required">认证令牌</label>
-			<div class="layui-input-block">
-				<input type="text" name="github.authToken" placeholder="请输入认证令牌" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-form-item" style="display: none" id="githubAuthNameDiv">
-			<label class="layui-form-label required">认证名称</label>
-			<div class="layui-input-block">
-				<input type="text" name="github.authName" placeholder="请输入认证名称" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<div class="layui-form-item" style="display: none" id="githubAuthPasswordDiv">
-			<label class="layui-form-label required">认证密码</label>
-			<div class="layui-input-block">
-				<input type="password" name="github.authPassword" placeholder="请输入认证密码" autocomplete="off" class="layui-input">
-			</div>
-		</div>
-		<!-- github end -->
 		
 		<div class="layui-form-item">
 			<div class="layui-input-block">
@@ -187,10 +149,24 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
 			if(data.field.type == 'GitLab'){
+
+				// 修复：直接从表单数据中获取仓库地址
+				var repoUrl = data.field['gitLab.url'];
+
+				if(!repoUrl || repoUrl.trim() == ''){
+					layer.msg('仓库地址不能为空', {icon: 5, shift: 6});
+					return false;
+				}
+
+				if(repoUrl.substr(0, 4) !== 'http'){
+					layer.msg('仓库地址格式不正确', {icon: 5, shift: 6});
+					return false;
+				}
 			
 				var fields = data.field;
 				var allParams = {};
 				var extendParams = {};
+
 				for(var fieldName in fields){
 					var fs = fieldName.split(".");
 					if(fs.length > 1){
@@ -199,16 +175,9 @@
 						allParams[fieldName] = fields[fieldName];
 					}
 				}
+
 				allParams['gitLab'] = extendParams;
-			
-				if(allParams.gitLab.url == ''){
-					layer.msg('仓库地址不能为空', {icon: 5, shift: 6});
-					return false;
-				}
-				if(allParams.gitLab.url.substr(0, 4) !== 'http'){
-					layer.msg('仓库地址格式不正确', {icon: 5, shift: 6});
-					return false;
-				}
+
 				//令牌认证
 				if(allParams.gitLab.authType == 1){
 					if(data.field.authToken == ''){

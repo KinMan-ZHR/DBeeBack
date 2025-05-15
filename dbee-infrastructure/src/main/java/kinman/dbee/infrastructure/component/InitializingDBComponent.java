@@ -109,6 +109,8 @@ public class InitializingDBComponent implements InitializingBean {
 	}
 
 	private List<String> parseSqlOfHighVersion(String userVersion) throws Exception {
+		if("0.0.1".equals(userVersion))
+			return new ArrayList<>();
 		String sqlFilePath = "sql/sqlite/*";
 		if(componentConstants.getMysql().isEnable()) {
 			sqlFilePath = "sql/mysql/*";
@@ -162,22 +164,22 @@ public class InitializingDBComponent implements InitializingBean {
 	}
 	
 	private void initSchema(List<String> sqls) throws Exception {
-//		SqlSession sqlSession = sqlSessionFactory.openSession();
-//		Connection connection = sqlSession.getConnection();
-//		Statement statement = connection.createStatement();
-//		try {
-//			logger.info("Start to initialize version db schema");
-//			for (String sql : sqls) {
-//				statement.execute(sql);
-//			}
-//			logger.info("Initialized version db schema successfully");
-//		} catch (Exception e) {
-//			logger.error("Failed to init data schema", e);
-//			throw e;
-//		} finally {
-//			statement.close();
-//			connection.close();
-//		}
+		SqlSession sqlSession = sqlSessionFactory.openSession();
+		Connection connection = sqlSession.getConnection();
+		Statement statement = connection.createStatement();
+		try {
+			logger.info("Start to initialize version db schema");
+			for (String sql : sqls) {
+				statement.execute(sql);
+			}
+			logger.info("Initialized version db schema successfully");
+		} catch (Exception e) {
+			logger.error("Failed to init data schema", e);
+			throw e;
+		} finally {
+			statement.close();
+			connection.close();
+		}
 	}
 
 	/**
