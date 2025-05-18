@@ -960,11 +960,6 @@ public class K8sClusterStrategy implements ClusterStrategy {
 		containerOfNginx(context, container);
 		containerOfNodejs(context, container);
 		containerOfNuxt(context, container);
-		containerOfNext(context, container);
-		containerOfGo(context, container);
-		containerOfPython(context, container);
-		containerOfFlask(context, container);
-		containerOfDjango(context, container);
 		envVars(context, container);
 		container.setImagePullPolicy("Always");
 		
@@ -1047,9 +1042,6 @@ public class K8sClusterStrategy implements ClusterStrategy {
 	}
 	
 	private void containerOfNuxt(DeploymentContext context, V1Container container) {
-		if(!nuxtApp(context.getApp())) {
-			return;
-		}
 		AppExtendNuxt appExtend = context.getApp().getAppExtend();
 		if(!NuxtDeploymentTypeEnum.DYNAMIC.getCode().equals(appExtend.getDeploymentType())) {
 			return;
@@ -1068,30 +1060,7 @@ public class K8sClusterStrategy implements ClusterStrategy {
 		container.setCommand(Arrays.asList("sh", "-c", commands));
 		container.setImage(context.getFullNameOfImage());
 	}
-	
-	private void containerOfNext(DeploymentContext context, V1Container container) {
-		if(!TechTypeEnum.NEXT.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		AppExtendNext appExtend = context.getApp().getAppExtend();
-		if(!NuxtDeploymentTypeEnum.DYNAMIC.getCode().equals(appExtend.getDeploymentType())) {
-			return;
-		}
-		String appName = context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export NODE_ENV=" + context.getAppEnv().getTag())
-				.append(" && export HOST=0.0.0.0")
-				.append(" && export PORT=" + context.getAppEnv().getServicePort())
-				.append(" && cd ").append(Constants.USR_LOCAL_HOME)
-				.append(" && tar zxf ").append(appName).append(".tar.gz")
-				.append(" && cd ").append(appName)
-				.append(" && chmod +x node_modules/.bin/next")
-				.append(" && exec npm start")
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
+
 	private void envVars(DeploymentContext context, V1Container container) {
 		List<V1EnvVar> envVars = new ArrayList<>();
 		V1EnvVar envVar = new V1EnvVar();
@@ -1106,9 +1075,7 @@ public class K8sClusterStrategy implements ClusterStrategy {
 		if(!warFileType(context.getApp())) {
 			return;
 		}
-		
 		container.setImage(context.getApp().getBaseImage());
-		
 		//Dbee定义的Jvm参数
 		StringBuilder argsStr = new StringBuilder();
 		List<String> jvmArgsOfDbee = jvmArgsOfDbee(context);
@@ -1125,82 +1092,7 @@ public class K8sClusterStrategy implements ClusterStrategy {
 		envVar.setValue(argsStr.toString());
 		container.getEnv().add(envVar);
 	}
-	
-	private static void containerOfGo(DeploymentContext context, V1Container container) {
-		if(!goApp(context.getApp())) {
-			return;
-		}
-		String executableFile = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export GO_ENV=" + context.getAppEnv().getTag())
-				.append(" && chmod +x "+ executableFile)
-				.append(" && exec " + executableFile)
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfPython(DeploymentContext context, V1Container container) {
-		if(!pythonApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendPython)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "main.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export PYTHON_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec python " + startFile)
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfFlask(DeploymentContext context, V1Container container) {
-		if(!flaskApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendFlask)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "app.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export FLASK_APP=" + startFile)
-				.append(" && export FLASK_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec flask run --host 0.0.0.0 --port " + context.getAppEnv().getServicePort())
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfDjango(DeploymentContext context, V1Container container) {
-		if(!djangoApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendDjango)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "manage.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export DJANGO_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec python ")
-				.append(startFile)
-				.append(" runserver")
-				.append(" 0.0.0.0:" + context.getAppEnv().getServicePort())
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
+
 	private void lifecycle(V1Container container, DeploymentContext context) {
 		if(context.getEnvLifecycle() == null) {
 			return;
@@ -1515,22 +1407,6 @@ public class K8sClusterStrategy implements ClusterStrategy {
 		return TechTypeEnum.SPRING_BOOT.getCode().equals(app.getTechType());
 	}
 	
-	private static boolean goApp(App app) {
-		return TechTypeEnum.GO.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean pythonApp(App app) {
-		return TechTypeEnum.FLASK.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean flaskApp(App app) {
-		return TechTypeEnum.FLASK.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean djangoApp(App app) {
-		return TechTypeEnum.DJANGO.getCode().equals(app.getTechType());
-	}
-	
 	/**
 	 * Nginx服务，如：Vue、React、Html
 	 */
@@ -1551,10 +1427,6 @@ public class K8sClusterStrategy implements ClusterStrategy {
 	
 	private boolean nodejsApp(App app) {
 		return TechTypeEnum.NODEJS.getCode().equals(app.getTechType());
-	}
-	
-	private boolean nuxtApp(App app) {
-		return TechTypeEnum.NUXT.getCode().equals(app.getTechType());
 	}
 	
 	private List<V1VolumeMount> volumeMounts(DeploymentContext context) {

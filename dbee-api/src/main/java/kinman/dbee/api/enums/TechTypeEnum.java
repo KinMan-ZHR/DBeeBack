@@ -6,14 +6,7 @@ public enum TechTypeEnum {
 	VUE(2, "Vue"),
 	REACT(3, "React"),
 	NODEJS(4, "Nodejs"),
-	HTML(5, "Html"),
-	GO(6, "Go"),
-	PYTHON(7, "Python"),
-	FLASK(8, "Flask"),
-	DJANGO(9, "Django"),
-	NUXT(10, "Nuxt"),
-	NEXT(11, "Next"),
-	DOTNET(12, ".Net");
+	HTML(5, "Html");
 	
 	private final Integer code;
 

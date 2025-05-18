@@ -1,32 +1,13 @@
 package kinman.dbee.infrastructure.repository;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import kinman.dbee.api.enums.MessageCodeEnum;
 import kinman.dbee.api.enums.RoleTypeEnum;
 import kinman.dbee.api.enums.TechTypeEnum;
 import kinman.dbee.api.enums.YesOrNoEnum;
 import kinman.dbee.api.response.PageData;
-import kinman.dbee.api.response.model.App;
+import kinman.dbee.api.response.model.*;
 import kinman.dbee.api.response.model.App.AppExtend;
-import kinman.dbee.api.response.model.AppExtendDjango;
-import kinman.dbee.api.response.model.AppExtendDotNet;
-import kinman.dbee.api.response.model.AppExtendFlask;
-import kinman.dbee.api.response.model.AppExtendGo;
-import kinman.dbee.api.response.model.AppExtendHtml;
-import kinman.dbee.api.response.model.AppExtendJava;
-import kinman.dbee.api.response.model.AppExtendNext;
-import kinman.dbee.api.response.model.AppExtendNode;
-import kinman.dbee.api.response.model.AppExtendNodejs;
-import kinman.dbee.api.response.model.AppExtendNuxt;
-import kinman.dbee.api.response.model.AppExtendPython;
 import kinman.dbee.infrastructure.param.AppMemberParam;
 import kinman.dbee.infrastructure.param.AppParam;
 import kinman.dbee.infrastructure.repository.mapper.AppMapper;
@@ -34,18 +15,15 @@ import kinman.dbee.infrastructure.repository.mapper.CustomizedBaseMapper;
 import kinman.dbee.infrastructure.repository.po.AppMemberPO;
 import kinman.dbee.infrastructure.repository.po.AppPO;
 import kinman.dbee.infrastructure.strategy.login.dto.LoginUser;
-import kinman.dbee.infrastructure.utils.BeanUtils;
-import kinman.dbee.infrastructure.utils.Constants;
-import kinman.dbee.infrastructure.utils.JsonUtils;
-import kinman.dbee.infrastructure.utils.LogUtils;
-import kinman.dbee.infrastructure.utils.StringUtils;
+import kinman.dbee.infrastructure.utils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class AppRepository extends BaseRepository<AppParam, AppPO> {
@@ -158,27 +136,6 @@ public class AppRepository extends BaseRepository<AppParam, AppPO> {
 		}
 		if (TechTypeEnum.HTML.getCode().equals(appPO.getTechType())) {
 			return JsonUtils.parseToObject(appPO.getExt(), AppExtendHtml.class);
-		}
-		if (TechTypeEnum.GO.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendGo.class);
-		}
-		if (TechTypeEnum.PYTHON.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendPython.class);
-		}
-		if (TechTypeEnum.FLASK.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendFlask.class);
-		}
-		if (TechTypeEnum.DJANGO.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendDjango.class);
-		}
-		if (TechTypeEnum.NUXT.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendNuxt.class);
-		}
-		if (TechTypeEnum.NEXT.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendNext.class);
-		}
-		if (TechTypeEnum.DOTNET.getCode().equals(appPO.getTechType())) {
-			return JsonUtils.parseToObject(appPO.getExt(), AppExtendDotNet.class);
 		}
 		return null;
 	}

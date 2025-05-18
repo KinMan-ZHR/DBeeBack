@@ -484,8 +484,7 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		//Node类应用
 		if (TechTypeEnum.VUE.getCode().equals(context.getApp().getTechType())
 				|| TechTypeEnum.REACT.getCode().equals(context.getApp().getTechType())
-				|| TechTypeEnum.NUXT.getCode().equals(context.getApp().getTechType())
-				|| TechTypeEnum.NEXT.getCode().equals(context.getApp().getTechType())) {
+				) {
 			AppExtendNodejs appExtend =  context.getApp().getAppExtend();
 			String pomName = "";
 			if (Objects.isNull(appExtend.getCompileType())
@@ -522,16 +521,6 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 				logger.error("Failed to build node app", e);
 			}
 			return packByMaven(context, null);
-		}
-
-		//Go应用
-		if (TechTypeEnum.GO.getCode().equals(context.getApp().getTechType())) {
-			return packByGo(context);
-		}
-		
-		//.Net应用
-		if (TechTypeEnum.DOTNET.getCode().equals(context.getApp().getTechType())) {
-			return packByDotNet(context);
 		}
 
 		return true;
@@ -656,67 +645,6 @@ public abstract class DeploymentApplicationService extends ApplicationService {
         return execCommand(env, cmd);
     }
 
-	private boolean packByGo(DeploymentContext context) {
-		AppExtendGo appExtend = context.getApp().getAppExtend();
-		//统一下载amd64安装文件，并允许交叉编译，即设置CGO_ENABLED=0
-		String goHome = downloadGo(appExtend.getGoVersion().substring(1));
-		String goPath = new File(goHome).getParent();
-		String goBin = goHome + "bin/go";
-		Map<String, String> env = new HashMap<>();
-        env.put("CGO_ENABLED", "0");
-        env.put("GOOS", "linux");
-        env.put("GOARCH", "amd64");
-        env.put("GOPROXY", "https://goproxy.cn");
-        env.put("GOCACHE", goPath + "/cache/build");
-        env.put("GOMODCACHE", goPath + "/cache/pkg/mod");
-        env.put("GOPATH", goPath + "/cache");
-
-        String appName = context.getApp().getAppName();
-        StringBuilder cmd = new StringBuilder();
-		if(!Constants.isWindows()) {
-			cmd.append("chmod +x ").append(goBin).append(" && ");
-			cmd.append("chmod +x ").append(goHome + "pkg/tool/linux_amd64/*").append(" && ");
-		}
-		//指令格式：
-		//cd /opt/data/app/hello-go/hello-go-1693449686623 \
-		//&& /opt/data/go/go-1.20.7/bin/go mod download \
-		//&& /opt/data/go/go-1.20.7/bin/go build -o hello-go
-		cmd.append("cd " + context.getLocalPathOfBranch())
-				.append(" && " + goBin + " mod download")
-				.append(" && " + goBin + " build -o " + appName);
-
-		if(!execCommand(env, cmd.toString())) {
-			logger.error("Failed to pack by go");
-			return false;
-		}
-
-		return true;
-	}
-	
-	private boolean packByDotNet(DeploymentContext context) {
-		AppExtendDotNet appExtend = context.getApp().getAppExtend();
-		String dotNetHome = downloadDotNet(appExtend.getDotNetVersion().substring(1));
-		String dotNetBin = dotNetHome + "dotnet";
-        String appName = context.getApp().getAppName();
-        StringBuilder cmd = new StringBuilder();
-		if(!Constants.isWindows()) {
-			cmd.append("chmod +x " + dotNetBin)
-				.append(" && ");
-		}
-		//指令格式：
-		//cd /opt/data/app/hello-dotnet/ \
-		//&& /opt/data/dotnet/sdk-8.0.100/dotnet publish hello-dotnet
-		cmd.append("cd " + context.getLocalPathOfBranch())
-			.append(" && " + dotNetBin + " publish -o " + appName);
-
-		if(!execCommand(cmd.toString())) {
-			logger.error("Failed to pack by .net");
-			return false;
-		}
-		
-		return true;
-	}
-
 	private boolean buildImage(DeploymentContext context) {
 
 		buildSpringBootImage(context);
@@ -724,23 +652,9 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		buildNodeImage(context);
 
 		buildNodejsImage(context);
-		
-		buildNuxtImage(context);
-		
-		buildNextImage(context);
 
 		buildHtmlImage(context);
 
-		buildGoImage(context);
-
-		buildPythonImage(context);
-
-		buildFlaskImage(context);
-
-		buildDjangoImage(context);
-
-		buildDotNetImage(context);
-		
 		return true;
 	}
 
@@ -835,53 +749,7 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		}
 		doBuildNodejsImage(context);
 	}
-	
-	private void buildNuxtImage(DeploymentContext context) {
-		if(!TechTypeEnum.NUXT.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		File branchFile = new File(context.getLocalPathOfBranch());
-		File[] codeFiles = branchFile.listFiles();
-		for(File c : codeFiles) {
-			if(Constants.NODE_APP_TARGET_FILE.contains(c.getName())) {
-				continue;
-			}
-			try {
-				if(c.isDirectory()) {
-					FileUtils.deleteDirectory(c);
-				}else {
-					c.delete();
-				}
-			} catch (IOException e) {
-				logger.error("Failed to clear code file", e);
-			}
-		}
-		doBuildNodejsImage(context);
-	}
-	
-	private void buildNextImage(DeploymentContext context) {
-		if(!TechTypeEnum.NEXT.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		File branchFile = new File(context.getLocalPathOfBranch());
-		File[] codeFiles = branchFile.listFiles();
-		for(File c : codeFiles) {
-			if(Constants.NODE_APP_TARGET_FILE.contains(c.getName())) {
-				continue;
-			}
-			try {
-				if(c.isDirectory()) {
-					FileUtils.deleteDirectory(c);
-				}else {
-					c.delete();
-				}
-			} catch (IOException e) {
-				logger.error("Failed to clear code file", e);
-			}
-		}
-		doBuildNodejsImage(context);
-	}
-	
+
 	private void doBuildNodejsImage(DeploymentContext context) {
 		File branchFile = new File(context.getLocalPathOfBranch());
 		//为了提高制作镜像的性能，这里先把编译后的文件压缩，然后在部署阶段进行解压
@@ -912,67 +780,6 @@ public abstract class DeploymentApplicationService extends ApplicationService {
 		doBuildImage(context, context.getApp().getBaseImage(), null, Arrays.asList(targetFile.toPath()));
 	}
 
-	private void buildGoImage(DeploymentContext context) {
-		if(!TechTypeEnum.GO.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		App app = context.getApp();
-		File targetFile = new File(context.getLocalPathOfBranch() + app.getAppName());
-		String baseImage = Constants.BUSYBOX_IMAGE_URL;
-		String executableFile = Constants.USR_LOCAL_HOME + app.getAppName();
-		List<String> entrypoint = Arrays.asList("chmod", "+x", executableFile, executableFile);
-		doBuildImage(context, baseImage, entrypoint, Arrays.asList(targetFile.toPath()));
-	}
-
-	private void buildPythonImage(DeploymentContext context) {
-		if(!TechTypeEnum.PYTHON.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		List<String> entrypoint = Arrays.asList("python", "main.py");
-		buildPythonImage(context, entrypoint);
-	}
-
-	private void buildFlaskImage(DeploymentContext context) {
-		if(!TechTypeEnum.FLASK.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		List<String> entrypoint = Arrays.asList("flask", "run");
-		buildPythonImage(context, entrypoint);
-	}
-
-	private void buildDjangoImage(DeploymentContext context) {
-		if(!TechTypeEnum.DJANGO.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		List<String> entrypoint = Arrays.asList("python", "manage.py", "runserver");
-		buildPythonImage(context, entrypoint);
-	}
-
-	private void buildPythonImage(DeploymentContext context, List<String> entrypoint) {
-		File targetFile = new File(context.getLocalPathOfBranch());
-		AppExtendPython appExtend = context.getApp().getAppExtend();
-		String baseImage = Constants.PYTHON_IMAGE_BASE_URL + appExtend.getPythonVersion().substring(1);
-		if(!StringUtils.isBlank(appExtend.getPythonImage())){
-			baseImage = appExtend.getPythonImage();
-		}
-		doBuildImage(context, baseImage, entrypoint, Arrays.asList(targetFile.toPath()));
-	}
-	
-	private void buildDotNetImage(DeploymentContext context) {
-		if(!TechTypeEnum.DOTNET.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		File targetFile = new File(context.getLocalPathOfBranch() + context.getApp().getAppName());
-		AppExtendDotNet appExtend = context.getApp().getAppExtend();
-		String dotNetVersion = appExtend.getDotNetVersion();
-		dotNetVersion = dotNetVersion.substring(1, dotNetVersion.lastIndexOf("."));
-		String baseImage = Constants.DOTNET_IMAGE_BASE_URL + dotNetVersion;
-		if(!StringUtils.isBlank(appExtend.getDotNetImage())){
-			baseImage = appExtend.getDotNetImage();
-		}
-		List<String> entrypoint = Arrays.asList("dotnet");
-		doBuildImage(context, baseImage, entrypoint, Arrays.asList(targetFile.toPath()));
-	}
 
 	private void doBuildImage(DeploymentContext context, String baseImageName, List<String> entrypoint, List<Path> targetFiles) {
 		ImageRepo imageRepo = context.getGlobalConfigAgg().getImageRepo();

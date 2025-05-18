@@ -1,49 +1,19 @@
 package kinman.dbee.application.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import kinman.dbee.api.enums.AppMemberRoleTypeEnum;
-import kinman.dbee.api.enums.GlobalConfigItemTypeEnum;
-import kinman.dbee.api.enums.ImageSourceEnum;
-import kinman.dbee.api.enums.MessageCodeEnum;
-import kinman.dbee.api.enums.NodeCompileTypeEnum;
-import kinman.dbee.api.enums.PackageFileTypeEnum;
-import kinman.dbee.api.enums.TechTypeEnum;
-import kinman.dbee.api.enums.TomcatVersionEnum;
+import com.google.cloud.tools.jib.api.Containerizer;
+import com.google.cloud.tools.jib.api.Jib;
+import com.google.cloud.tools.jib.api.LogEvent;
+import com.google.cloud.tools.jib.api.RegistryImage;
+import com.google.cloud.tools.jib.api.buildplan.AbsoluteUnixPath;
+import com.google.cloud.tools.jib.api.buildplan.Port;
+import kinman.dbee.api.enums.*;
 import kinman.dbee.api.param.app.AppCreationParam;
 import kinman.dbee.api.param.app.AppDeletionParam;
 import kinman.dbee.api.param.app.AppPageParam;
 import kinman.dbee.api.param.app.AppUpdateParam;
 import kinman.dbee.api.response.PageData;
-import kinman.dbee.api.response.model.App;
+import kinman.dbee.api.response.model.*;
 import kinman.dbee.api.response.model.App.AppExtend;
-import kinman.dbee.api.response.model.AppExtendDjango;
-import kinman.dbee.api.response.model.AppExtendDotNet;
-import kinman.dbee.api.response.model.AppExtendFlask;
-import kinman.dbee.api.response.model.AppExtendGo;
-import kinman.dbee.api.response.model.AppExtendHtml;
-import kinman.dbee.api.response.model.AppExtendJava;
-import kinman.dbee.api.response.model.AppExtendNext;
-import kinman.dbee.api.response.model.AppExtendNode;
-import kinman.dbee.api.response.model.AppExtendNodejs;
-import kinman.dbee.api.response.model.AppExtendNuxt;
-import kinman.dbee.api.response.model.AppExtendPython;
-import kinman.dbee.api.response.model.GlobalConfigAgg;
 import kinman.dbee.api.response.model.GlobalConfigAgg.ImageRepo;
 import kinman.dbee.infrastructure.exception.ApplicationException;
 import kinman.dbee.infrastructure.param.AppEnvParam;
@@ -53,13 +23,10 @@ import kinman.dbee.infrastructure.param.GlobalConfigParam;
 import kinman.dbee.infrastructure.repository.po.AppEnvPO;
 import kinman.dbee.infrastructure.repository.po.AppPO;
 import kinman.dbee.infrastructure.strategy.login.dto.LoginUser;
-import kinman.dbee.infrastructure.utils.BeanUtils;
-import kinman.dbee.infrastructure.utils.Constants;
-import kinman.dbee.infrastructure.utils.FileUtils;
-import kinman.dbee.infrastructure.utils.HttpUtils;
-import kinman.dbee.infrastructure.utils.LogUtils;
-import kinman.dbee.infrastructure.utils.StringUtils;
-import kinman.dbee.infrastructure.utils.ThreadPoolUtils;
+import kinman.dbee.infrastructure.utils.*;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +34,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.google.cloud.tools.jib.api.Containerizer;
-import com.google.cloud.tools.jib.api.Jib;
-import com.google.cloud.tools.jib.api.LogEvent;
-import com.google.cloud.tools.jib.api.RegistryImage;
-import com.google.cloud.tools.jib.api.buildplan.AbsoluteUnixPath;
-import com.google.cloud.tools.jib.api.buildplan.Port;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -381,15 +349,7 @@ public class AppApplicationService extends BaseApplicationService<App, AppPO> {
 		if(addParam.getCodeRepoPath().length() > 64) {
 			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "代码仓库地址不能大于64个字符");
 		}
-		if(addParam.getFirstDepartment() != null && addParam.getFirstDepartment().length() > 16) {
-			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "一级部门不能大于16个字符");
-		}
-		if(addParam.getSecondDepartment() != null && addParam.getSecondDepartment().length() > 16) {
-			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "二级部门不能大于16个字符");
-		}
-		if(addParam.getThirdDepartment() != null && addParam.getThirdDepartment().length() > 16) {
-			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "三级部门不能大于16个字符");
-		}
+
 		if(addParam.getDescription() != null && addParam.getDescription().length() > 128) {
 			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "应用描述不能大于128个字符");
 		}
@@ -414,25 +374,6 @@ public class AppApplicationService extends BaseApplicationService<App, AppPO> {
 				throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "Yarn版本不能为空");
 			}
 		}
-		if(TechTypeEnum.GO.getCode().equals(addParam.getTechType())) {
-			if(addParam.getExtendGoParam() == null
-					|| StringUtils.isBlank(addParam.getExtendGoParam().getGoVersion())){
-				throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "Go版本不能为空");
-			}
-			if(!addParam.getExtendGoParam().getGoVersion().startsWith("v")){
-				throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "Go版本格式不正确");
-			}
-		}
-		if(TechTypeEnum.FLASK.getCode().equals(addParam.getTechType())
-				&& addParam.getExtendFlaskParam() == null
-				&& StringUtils.isBlank(addParam.getExtendFlaskParam().getPythonVersion())){
-			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "Pyton版本不能为空");
-		}
-		if(TechTypeEnum.DJANGO.getCode().equals(addParam.getTechType())
-				&& addParam.getExtendDjangoParam() == null
-				&& StringUtils.isBlank(addParam.getExtendDjangoParam().getPythonVersion())){
-			throw new ApplicationException(MessageCodeEnum.INVALID_PARAM.getCode(), "Pyton版本不能为空");
-		}
 	}
 	
 	private AppParam buildBizParam(AppCreationParam requestParam) {
@@ -454,34 +395,6 @@ public class AppApplicationService extends BaseApplicationService<App, AppPO> {
 				&& requestParam.getExtendHtmlParam() != null) {
 			appExtend = new AppExtendHtml();
 			BeanUtils.copyProperties(requestParam.getExtendHtmlParam(), appExtend);
-		}else if(TechTypeEnum.GO.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendGoParam() != null) {
-			appExtend = new AppExtendGo();
-			BeanUtils.copyProperties(requestParam.getExtendGoParam(), appExtend);
-		}else if(TechTypeEnum.PYTHON.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendPythonParam() != null) {
-			appExtend = new AppExtendPython();
-			BeanUtils.copyProperties(requestParam.getExtendPythonParam(), appExtend);
-		}else if(TechTypeEnum.FLASK.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendFlaskParam() != null) {
-			appExtend = new AppExtendFlask();
-			BeanUtils.copyProperties(requestParam.getExtendFlaskParam(), appExtend);
-		}else if(TechTypeEnum.DJANGO.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendDjangoParam() != null) {
-			appExtend = new AppExtendDjango();
-			BeanUtils.copyProperties(requestParam.getExtendDjangoParam(), appExtend);
-		}else if(TechTypeEnum.NUXT.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendNuxtParam() != null) {
-			appExtend = new AppExtendNuxt();
-			BeanUtils.copyProperties(requestParam.getExtendNuxtParam(), appExtend);
-		}else if(TechTypeEnum.NEXT.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendNextParam() != null) {
-			appExtend = new AppExtendNext();
-			BeanUtils.copyProperties(requestParam.getExtendNextParam(), appExtend);
-		}else if(TechTypeEnum.DOTNET.getCode().equals(requestParam.getTechType())
-				&& requestParam.getExtendDotNetParam() != null) {
-			appExtend = new AppExtendDotNet();
-			BeanUtils.copyProperties(requestParam.getExtendDotNetParam(), appExtend);
 		}
 		bizParam.setAppExtend(appExtend);
 		return bizParam;

@@ -20,13 +20,6 @@
 								<option value="3">React</option>
 								<option value="4">Nodejs</option>
 								<option value="5">Html</option>
-								<option value="6">Go</option>
-								<option value="7">Python</option>
-								<option value="8">Flask</option>
-								<option value="9">Django</option>
-								<option value="10">Nuxt</option>
-								<option value="11">Next</option>
-								<option value="12">.Net</option>
 							</select>
 						</div>
 					</div>
@@ -42,24 +35,6 @@
 							<div id="affinityAppName"></div>
 						</div>
 						<div class="layui-form-mid layui-word-aux">会与亲密应用尽量部署在相同节点上</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">一级部门</label>
-						<div class="layui-input-block">
-							<input type="text" name="firstDepartment" placeholder="请输入一级部门" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">二级部门</label>
-						<div class="layui-input-block">
-							<input type="text" name="secondDepartment" placeholder="请输入二级部门" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">三级部门</label>
-						<div class="layui-input-block">
-							<input type="text" name="thirdDepartment" placeholder="请输入三级部门" autocomplete="off" class="layui-input">
-						</div>
 					</div>
 					<div class="layui-form-item">
 						<label class="layui-form-label">描述</label>
@@ -132,7 +107,6 @@
 						<div class="layui-input-inline" style="width: 50%">
 							<input type="text" name="baseImage" id="baseImage2" placeholder="如：dockerproxy.net/library/openjdk:11.0.16-jdk" autocomplete="off" class="layui-input">
 						</div>
-						<div class="layui-form-mid layui-word-aux" id="baseImageDesc"><a href="#" target="_blank">《镜像制作指引》</a></div>
 					</div>
 					<div class="layui-form-item">
 						<label class="layui-form-label">Java安装目录</label>
@@ -266,229 +240,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="goFormItem" lay-filter="goFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Go版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendGoParam.goVersion" placeholder="如：v1.20.7" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnGo">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="pythonFormItem" lay-filter="pythonFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Python版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendPythonParam.pythonVersion" placeholder="如：v3.11.5" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">Python镜像</label>
-						<div class="layui-input-block">
-							<input name="extendPythonParam.pythonImage" placeholder="默认使用Python的官方镜像，如：dockerproxy.net/library/python:3.11.5" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">启动文件</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendPythonParam.startFile" placeholder="默认：main.py" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnPython">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="flaskFormItem" lay-filter="flaskFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Python版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendFlaskParam.pythonVersion" placeholder="如：v3.11.5" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">Python镜像</label>
-						<div class="layui-input-block">
-							<input name="extendFlaskParam.pythonImage" placeholder="默认使用Python的官方镜像，如：dockerproxy.net/library/python:3.11.5" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">启动文件</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendFlaskParam.startFile" placeholder="默认：app.py" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnFlask">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="djangoFormItem" lay-filter="djangoFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Python版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendDjangoParam.pythonVersion" placeholder="如：v3.11.5" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">Python镜像</label>
-						<div class="layui-input-block">
-							<input name="extendDjangoParam.pythonImage" placeholder="默认使用Python的官方镜像，如：dockerproxy.net/library/python:3.11.5" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">启动文件</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendDjangoParam.startFile" placeholder="默认：manage.py" autocomplete="off" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnDjango">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="nuxtFormItem" lay-filter="nuxtFormItem">
-					<div class="layui-form-item" id="nuxtDeploymentTypeDiv">
-						<label class="layui-form-label required" id="baseImageLabel">部署方式</label>
-						<div class="layui-input-block">
-							<select name="extendNuxtParam.deploymentType" id="extendNuxtParam-deploymentType" lay-verify="required" lay-reqtext="部署方式不能为空">
-								<option value="1">动态部署</option>
-								<!--<option value="2">静态部署</option>-->
-							</select>
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Node版本</label>
-						<div class="layui-input-block">
-							<input name="extendNuxtParam.nodeVersion" placeholder="如：v18.17.1" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">Node镜像</label>
-						<div class="layui-input-block">
-							<input name="extendNuxtParam.nodeImage" placeholder="默认使用Node的官方镜像，如：dockerproxy.net/library/node:18.17.1" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label required">编译工具</label>
-						<div class="layui-input-block">
-							<select name="extendNuxtParam.compileType" lay-filter="extendNuxtParam-compileType" id="extendNuxtParam-compileType" lay-verify="required" lay-reqtext="编译工具不能为空">
-								<option value="">请选择</option>
-								<option value="1">Npm</option>
-								<!--通过Pnpm构建的版本，启动服务有问题-->
-								<!--<option value="2">Pnpm</option>-->
-								<option value="3">Yarn</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-form-item" style="display:none" id="extendNuxtParam-pnpmVersionDiv">
-						<label class="layui-form-label required">Pnpm版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendNuxtParam.pnpmVersion"  placeholder="如：v8.7.0" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item" style="display:none" id="extendNuxtParam-yarnVersionDiv">
-						<label class="layui-form-label required">Yarn版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendNuxtParam.yarnVersion" placeholder="如：v1.22.19" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnNuxt">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="nextFormItem" lay-filter="nextFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">Node版本</label>
-						<div class="layui-input-block">
-							<input name="extendNextParam.nodeVersion" placeholder="如：v18.17.1" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">Node镜像</label>
-						<div class="layui-input-block">
-							<input name="extendNextParam.nodeImage" placeholder="默认使用Node的官方镜像，如：dockerproxy.net/library/node:18.17.1" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label required">编译工具</label>
-						<div class="layui-input-block">
-							<select name="extendNextParam.compileType" lay-filter="extendNextParam-compileType" lay-verify="required" lay-reqtext="编译工具不能为空">
-								<option value="">请选择</option>
-								<option value="1">Npm</option>
-								<!--通过Pnpm构建的版本，启动服务有问题-->
-								<!--<option value="2">Pnpm</option>-->
-								<option value="3">Yarn</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-form-item" style="display:none" id="extendNextParam-pnpmVersionDiv">
-						<label class="layui-form-label required">Pnpm版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendNextParam.pnpmVersion" id="extendNextParam-pnpmVersion"  placeholder="如：v8.7.0" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item" style="display:none" id="extendNextParam-yarnVersionDiv">
-						<label class="layui-form-label required">Yarn版本</label>
-						<div class="layui-input-block">
-							<input type="text" name="extendNextParam.yarnVersion" id="extendNextParam-yarnVersion"  placeholder="如：v1.22.19" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item" id="nextDeploymentTypeDiv">
-						<label class="layui-form-label required" id="baseImageLabel">部署方式</label>
-						<div class="layui-input-block">
-							<select name="extendNextParam.deploymentType" id="extendNextParam-deploymentType" lay-verify="required" lay-reqtext="部署方式不能为空">
-								<option value="1">动态部署</option>
-								<option value="2">静态部署</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnNext">确认保存</button>
-						</div>
-					</div>
-				</div>
-				<div class="layui-form layuimini-form" style="display:none" id="dotNetFormItem" lay-filter="dotNetFormItem">
-					<div class="layui-form-item">
-						<label class="layui-form-label required">.Net版本</label>
-						<div class="layui-input-block">
-							<select name="extendDotNetParam.dotNetVersion">
-								<option value="v8.0.100">v8.0.100</option>
-								<option value="v7.0.404">v7.0.404</option>
-								<option value="v6.0.417">v6.0.417</option>
-								<option value="v5.0.408">v5.0.408</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-form-item">
-						<label class="layui-form-label">.Net镜像</label>
-						<div class="layui-input-block">
-							<input name="extendDotNetParam.dotNetImage" placeholder="如：mcr.microsoft.com/dotnet/aspnet:8.0" autocomplete="off"  class="layui-input">
-						</div>
-					</div>
-					<div class="layui-form-item required">
-						<div class="layui-input-block">
-							<button type="button" class="layui-btn layui-btn-primary pre">上一步</button>
-							<button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtnDotNet">确认保存</button>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -540,9 +291,6 @@
 					,"techType": res.data.techType
 					,"codeRepoPath": res.data.codeRepoPath
 					,"affinityAppNames": res.data.affinityAppNames
-					,"firstDepartment": res.data.firstDepartment
-					,"secondDepartment": res.data.secondDepartment
-					,"thirdDepartment": res.data.thirdDepartment
 					,"description": res.data.description
 				});
 				
@@ -622,69 +370,6 @@
 					form.val("htmlFormItem", {
 						"baseImageHtml": res.data.baseImage
 					});
-				//Go
-				}else if(res.data.techType == 6){
-					$("#goFormItem").show();
-					form.val("goFormItem", {
-						"extendGoParam.goVersion": extend.goVersion
-					});
-				//Python
-				}else if(res.data.techType == 7){
-					$("#pythonFormItem").show();
-					form.val("pythonFormItem", {
-						"extendPythonParam.pythonVersion": extend.pythonVersion,
-						"extendPythonParam.pythonImage": extend.pythonImage,
-						"extendPythonParam.startFile": extend.startFile
-					});
-				//Flask
-				}else if(res.data.techType == 8){
-					$("#flaskFormItem").show();
-					form.val("flaskFormItem", {
-						"extendFlaskParam.pythonVersion": extend.pythonVersion,
-						"extendFlaskParam.pythonImage": extend.pythonImage,
-						"extendFlaskParam.startFile": extend.startFile
-					});
-				//Django
-				}else if(res.data.techType == 9){
-					$("#djangoFormItem").show();
-					form.val("djangoFormItem", {
-						"extendDjangoParam.pythonVersion": extend.pythonVersion,
-						"extendDjangoParam.pythonImage": extend.pythonImage,
-						"extendDjangoParam.startFile": extend.startFile
-					});
-				//Nuxt
-				}else if(res.data.techType == 10){
-					form.val("nuxtFormItem", {
-						"extendNuxtParam.nodeVersion": extend.nodeVersion
-						,"extendNuxtParam.nodeImage": extend.nodeImage
-						,"extendNuxtParam.pnpmVersion": extend.pnpmVersion
-						,"extendNuxtParam.yarnVersion": extend.yarnVersion
-						,"extendNuxtParam.compileType": extend.compileType
-						,"extendNuxtParam.deploymentType": extend.deploymentType
-					});
-					initCompileType($, form, 'extendNuxtParam', extend.compileType);
-					$("#nuxtFormItem").show();
-				//Next
-				}else if(res.data.techType == 11){
-					form.val("nextFormItem", {
-						"extendNextParam.nodeVersion": extend.nodeVersion
-						,"extendNextParam.nodeImage": extend.nodeImage
-						,"extendNextParam.pnpmVersion": extend.pnpmVersion
-						,"extendNextParam.yarnVersion": extend.yarnVersion
-						,"extendNextParam.compileType": extend.compileType
-						,"extendNextParam.deploymentType": extend.deploymentType
-					});
-					initCompileType($, form, 'extendNextParam', extend.compileType);
-					$("#nextFormItem").show();
-				//.Net
-				}else if(res.data.techType == 12){
-					form.val("dotNetFormItem", {
-						"extendDotNetParam.dotNetVersion": extend.dotNetVersion
-						,"extendDotNetParam.dotNetImage": extend.dotNetImage
-					});
-					$("#dotNetFormItem").show();
-				}else{
-					$("#saveBtn").attr("lay-filter", "saveBtn").text("确认保存");
 				}
 			},
 			error: function(res){
@@ -772,27 +457,6 @@
 			//Html
 			}else if(data.field.techType == 5){
 				$("#htmlFormItem").append(firstFormData);
-			//Go
-			}else if(data.field.techType == 6){
-				$("#goFormItem").append(firstFormData);
-			//Python
-			}else if(data.field.techType == 7){
-				$("#pythonFormItem").append(firstFormData);
-			//Flask
-			}else if(data.field.techType == 8){
-				$("#flaskFormItem").append(firstFormData);
-			//Django
-			}else if(data.field.techType == 9){
-				$("#djangoFormItem").append(firstFormData);
-			//Nuxt
-			}else if(data.field.techType == 10){
-				$("#nuxtFormItem").append(firstFormData);
-			//Next
-			}else if(data.field.techType == 11){
-				$("#nextFormItem").append(firstFormData);
-			//.Net
-			}else if(data.field.techType == 12){
-				$("#dotNetFormItem").append(firstFormData);
 			}
             step.next('#stepForm');
             return false;
@@ -933,28 +597,6 @@
 		
 		//Html
 		submmit($, layer, form, 'saveBtnHtml', 'extendHtmlParam', parentIndex, appId);
-		
-		//Go
-		submmit($, layer, form, 'saveBtnGo', 'extendGoParam', parentIndex, appId);
-		
-		//Python
-		submmit($, layer, form, 'saveBtnPython', 'extendPythonParam', parentIndex, appId);
-		
-		//Flask
-		submmit($, layer, form, 'saveBtnFlask', 'extendFlaskParam', parentIndex, appId);
-		
-		//Django
-		submmit($, layer, form, 'saveBtnDjango', 'extendDjangoParam', parentIndex, appId);
-		
-		//Nuxt
-		submmit($, layer, form, 'saveBtnNuxt', 'extendNuxtParam', parentIndex, appId);
-		
-		//Next
-		submmit($, layer, form, 'saveBtnNext', 'extendNextParam', parentIndex, appId);
-		
-		//.Net
-		submmit($, layer, form, 'saveBtnDotNet', 'extendDotNetParam', parentIndex, appId);
-		
     });
 	
 	function compileType($, form, extendParamName){
@@ -1093,11 +735,9 @@
 		//Jar
 		if(packageFileType == 1){
 			$("#baseImage2").val(baseImageValue).attr("placeholder", "如：dockerproxy.net/library/openjdk:11.0.16-jdk");
-			$("#baseImageDesc a").attr("href", "https://gitee.com/i512team/dbee-doc/blob/main/guide/JDK%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C.md");
 		//War
 		}else if(packageFileType == 2){
 			$("#baseImage2").val(baseImageValue).attr("placeholder", "如：dockerproxy.net/library/tomcat:9.0.70-jdk11");
-			$("#baseImageDesc a").attr("href", "https://gitee.com/i512team/dbee-doc/blob/main/guide/Tomcat%E9%95%9C%E5%83%8F%E5%88%B6%E4%BD%9C.md");
 		}
 	}
 	

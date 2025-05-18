@@ -1,83 +1,25 @@
 package kinman.dbee.infrastructure.strategy.cluster.k8s;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import kinman.dbee.api.enums.ActionTypeEnum;
-import kinman.dbee.api.enums.AffinityLevelEnum;
-import kinman.dbee.api.enums.ImageSourceEnum;
-import kinman.dbee.api.enums.MessageCodeEnum;
-import kinman.dbee.api.enums.NginxVersionEnum;
-import kinman.dbee.api.enums.NuxtDeploymentTypeEnum;
-import kinman.dbee.api.enums.PackageFileTypeEnum;
-import kinman.dbee.api.enums.SchedulingTypeEnum;
-import kinman.dbee.api.enums.TechTypeEnum;
-import kinman.dbee.api.enums.YesOrNoEnum;
-import kinman.dbee.api.response.model.App;
-import kinman.dbee.api.response.model.AppEnv.EnvExtendSpringBoot;
-import kinman.dbee.api.response.model.AppExtendDjango;
-import kinman.dbee.api.response.model.AppExtendFlask;
-import kinman.dbee.api.response.model.AppExtendJava;
-import kinman.dbee.api.response.model.AppExtendNext;
-import kinman.dbee.api.response.model.AppExtendNodejs;
-import kinman.dbee.api.response.model.AppExtendNuxt;
-import kinman.dbee.api.response.model.AppExtendPython;
-import kinman.dbee.api.response.model.EnvHealth;
-import kinman.dbee.api.response.model.EnvHealth.Item;
-import kinman.dbee.api.response.model.EnvLifecycle;
-import kinman.dbee.api.response.model.GlobalConfigAgg.TraceTemplate;
-import kinman.dbee.infrastructure.repository.po.AffinityTolerationPO;
-import kinman.dbee.infrastructure.repository.po.AppEnvPO;
-import kinman.dbee.infrastructure.utils.Constants;
-import kinman.dbee.infrastructure.utils.DeploymentContext;
-import kinman.dbee.infrastructure.utils.JsonUtils;
-import kinman.dbee.infrastructure.utils.K8sUtils;
-import kinman.dbee.infrastructure.utils.LogUtils;
-import kinman.dbee.infrastructure.utils.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-
-import io.fabric8.kubernetes.api.model.Affinity;
-import io.fabric8.kubernetes.api.model.ConfigMapVolumeSource;
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.api.model.ContainerPort;
-import io.fabric8.kubernetes.api.model.EmptyDirVolumeSource;
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.ExecAction;
-import io.fabric8.kubernetes.api.model.HTTPGetAction;
-import io.fabric8.kubernetes.api.model.HostPathVolumeSource;
-import io.fabric8.kubernetes.api.model.IntOrString;
-import io.fabric8.kubernetes.api.model.LabelSelector;
-import io.fabric8.kubernetes.api.model.LabelSelectorRequirement;
-import io.fabric8.kubernetes.api.model.Lifecycle;
-import io.fabric8.kubernetes.api.model.LifecycleHandler;
-import io.fabric8.kubernetes.api.model.LocalObjectReference;
-import io.fabric8.kubernetes.api.model.NodeAffinity;
-import io.fabric8.kubernetes.api.model.NodeSelector;
-import io.fabric8.kubernetes.api.model.NodeSelectorRequirement;
-import io.fabric8.kubernetes.api.model.NodeSelectorTerm;
-import io.fabric8.kubernetes.api.model.PodAffinity;
-import io.fabric8.kubernetes.api.model.PodAffinityTerm;
-import io.fabric8.kubernetes.api.model.PodAntiAffinity;
-import io.fabric8.kubernetes.api.model.PreferredSchedulingTerm;
-import io.fabric8.kubernetes.api.model.Probe;
-import io.fabric8.kubernetes.api.model.Quantity;
-import io.fabric8.kubernetes.api.model.ResourceRequirements;
-import io.fabric8.kubernetes.api.model.TCPSocketAction;
-import io.fabric8.kubernetes.api.model.Toleration;
-import io.fabric8.kubernetes.api.model.Volume;
-import io.fabric8.kubernetes.api.model.VolumeMount;
-import io.fabric8.kubernetes.api.model.WeightedPodAffinityTerm;
+import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentBuilder;
 import io.fabric8.kubernetes.api.model.apps.DeploymentStrategy;
 import io.fabric8.kubernetes.api.model.apps.RollingUpdateDeployment;
+import kinman.dbee.api.enums.*;
+import kinman.dbee.api.response.model.*;
+import kinman.dbee.api.response.model.AppEnv.EnvExtendSpringBoot;
+import kinman.dbee.api.response.model.EnvHealth.Item;
+import kinman.dbee.api.response.model.GlobalConfigAgg.TraceTemplate;
+import kinman.dbee.infrastructure.repository.po.AffinityTolerationPO;
+import kinman.dbee.infrastructure.repository.po.AppEnvPO;
+import kinman.dbee.infrastructure.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class K8sDeploymentHelper {
 
@@ -422,13 +364,6 @@ public class K8sDeploymentHelper {
 		//Vue、React、Html应用会通过Nginx来启动服务
 		containerOfNginx(context, container);
 		containerOfNodejs(context, container);
-		containerOfNuxt(context, container);
-		containerOfNext(context, container);
-		containerOfGo(context, container);
-		containerOfPython(context, container);
-		containerOfFlask(context, container);
-		containerOfDjango(context, container);
-		containerOfDotNet(context, container);
 		envVars(context, container);
 		container.setImagePullPolicy("Always");
 		
@@ -497,65 +432,15 @@ public class K8sDeploymentHelper {
 			startFile = "index.js";
 		}
 		String appName = context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export NODE_ENV=" + context.getAppEnv().getTag())
-				.append(" && export HOST=0.0.0.0")
-				.append(" && export PORT=" + context.getAppEnv().getServicePort())
-				.append(" && cd ").append(Constants.USR_LOCAL_HOME)
-				.append(" && tar zxf ").append(appName).append(".tar.gz")
-				.append(" && cd ").append(appName)
-				.append(" && exec node " + startFile)
-				.toString();
+		String commands = "export NODE_ENV=" + context.getAppEnv().getTag() +
+				" && export HOST=0.0.0.0" + " && export PORT=" + context.getAppEnv().getServicePort() +
+				" && cd " + Constants.USR_LOCAL_HOME +
+				" && tar zxf " + appName + ".tar.gz" +
+				" && cd " + appName + " && exec node " + startFile;
 		container.setCommand(Arrays.asList("sh", "-c", commands));
 		container.setImage(context.getFullNameOfImage());
 	}
-	
-	private static void containerOfNuxt(DeploymentContext context, Container container) {
-		if(!nuxtApp(context.getApp())) {
-			return;
-		}
-		AppExtendNuxt appExtend = context.getApp().getAppExtend();
-		if(!NuxtDeploymentTypeEnum.DYNAMIC.getCode().equals(appExtend.getDeploymentType())) {
-			return;
-		}
-		String appName = context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export NODE_ENV=" + context.getAppEnv().getTag())
-				.append(" && export HOST=0.0.0.0")
-				.append(" && export PORT=" + context.getAppEnv().getServicePort())
-				.append(" && cd ").append(Constants.USR_LOCAL_HOME)
-				.append(" && tar zxf ").append(appName).append(".tar.gz")
-				.append(" && cd ").append(appName)
-				.append(" && chmod +x node_modules/.bin/nuxt")
-				.append(" && exec npm start")
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfNext(DeploymentContext context, Container container) {
-		if(!TechTypeEnum.NEXT.getCode().equals(context.getApp().getTechType())) {
-			return;
-		}
-		AppExtendNext appExtend = context.getApp().getAppExtend();
-		if(!NuxtDeploymentTypeEnum.DYNAMIC.getCode().equals(appExtend.getDeploymentType())) {
-			return;
-		}
-		String appName = context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export NODE_ENV=" + context.getAppEnv().getTag())
-				.append(" && export HOST=0.0.0.0")
-				.append(" && export PORT=" + context.getAppEnv().getServicePort())
-				.append(" && cd ").append(Constants.USR_LOCAL_HOME)
-				.append(" && tar zxf ").append(appName).append(".tar.gz")
-				.append(" && cd ").append(appName)
-				.append(" && chmod +x node_modules/.bin/next")
-				.append(" && exec npm start")
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
+
 	private static void envVars(DeploymentContext context, Container container) {
 		List<EnvVar> envVars = new ArrayList<>();
 		EnvVar envVar = new EnvVar();
@@ -570,7 +455,6 @@ public class K8sDeploymentHelper {
 		if(!warFileType(context.getApp())) {
 			return;
 		}
-		
 		container.setImage(context.getApp().getBaseImage());
 		
 		//Dbee定义的Jvm参数
@@ -589,98 +473,7 @@ public class K8sDeploymentHelper {
 		envVar.setValue(argsStr.toString());
 		container.getEnv().add(envVar);
 	}
-	
-	private static void containerOfGo(DeploymentContext context, Container container) {
-		if(!goApp(context.getApp())) {
-			return;
-		}
-		String executableFile = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export GO_ENV=" + context.getAppEnv().getTag())
-				.append(" && chmod +x "+ executableFile)
-				.append(" && exec " + executableFile)
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfPython(DeploymentContext context, Container container) {
-		if(!pythonApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendPython)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "main.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export PYTHON_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec python " + startFile)
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfFlask(DeploymentContext context, Container container) {
-		if(!flaskApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendFlask)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "app.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export FLASK_APP=" + startFile)
-				.append(" && export FLASK_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec flask run --host 0.0.0.0 --port " + context.getAppEnv().getServicePort())
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfDjango(DeploymentContext context, Container container) {
-		if(!djangoApp(context.getApp())) {
-			return;
-		}
-		String startFile = ((AppExtendDjango)context.getApp().getAppExtend()).getStartFile();
-		if(StringUtils.isBlank(startFile)) {
-			startFile = "manage.py";
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export DJANGO_ENV=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ --use-deprecated=legacy-resolver")
-				.append(" && exec python ")
-				.append(startFile)
-				.append(" runserver")
-				.append(" 0.0.0.0:" + context.getAppEnv().getServicePort())
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
-	private static void containerOfDotNet(DeploymentContext context, Container container) {
-		if(!dotNetApp(context.getApp())) {
-			return;
-		}
-		String appHome = Constants.USR_LOCAL_HOME + context.getApp().getAppName();
-		String commands = new StringBuilder()
-				.append("export env=" + context.getAppEnv().getTag())
-				.append(" && cd " + appHome)
-				.append(" && dotnet "+ context.getApp().getAppName() +".dll")
-				.append(" --urls http://*:"+ context.getAppEnv().getServicePort())
-				.append(" --environment " + context.getAppEnv().getTag())
-				.toString();
-		container.setCommand(Arrays.asList("sh", "-c", commands));
-		container.setImage(context.getFullNameOfImage());
-	}
-	
+
 	private static void lifecycle(Container container, DeploymentContext context) {
 		if(context.getEnvLifecycle() == null) {
 			return;
@@ -984,26 +777,7 @@ public class K8sDeploymentHelper {
 		return TechTypeEnum.SPRING_BOOT.getCode().equals(app.getTechType());
 	}
 	
-	private static boolean goApp(App app) {
-		return TechTypeEnum.GO.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean pythonApp(App app) {
-		return TechTypeEnum.FLASK.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean flaskApp(App app) {
-		return TechTypeEnum.FLASK.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean djangoApp(App app) {
-		return TechTypeEnum.DJANGO.getCode().equals(app.getTechType());
-	}
-	
-	private static boolean dotNetApp(App app) {
-		return TechTypeEnum.DOTNET.getCode().equals(app.getTechType());
-	}
-	
+
 	/**
 	 * Nginx服务，如：Vue、React、Html
 	 */
@@ -1012,15 +786,11 @@ public class K8sDeploymentHelper {
 				|| TechTypeEnum.REACT.getCode().equals(app.getTechType())
 				|| TechTypeEnum.HTML.getCode().equals(app.getTechType());
 	}
-	
+
 	private static boolean nodejsApp(App app) {
 		return TechTypeEnum.NODEJS.getCode().equals(app.getTechType());
 	}
-	
-	private static boolean nuxtApp(App app) {
-		return TechTypeEnum.NUXT.getCode().equals(app.getTechType());
-	}
-	
+
 	private static List<VolumeMount> volumeMounts(DeploymentContext context) {
 		List<VolumeMount> volumeMounts = new ArrayList<>();
 		
