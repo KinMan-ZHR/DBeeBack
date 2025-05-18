@@ -19,8 +19,6 @@ public class ComponentConstants {
 	private String dataPath;
 
 	private String logPath;
-
-	private boolean h2Enable = false;
 	
 	@Value("${thread_pool.build.core:#{null}}")
 	private Integer threadPoolBuildCore;
@@ -62,9 +60,6 @@ public class ComponentConstants {
 		}
 	}
 
-	public boolean isH2Enable() {
-		return h2Enable;
-	}
 
 	public String getVersion() {
 		return version;

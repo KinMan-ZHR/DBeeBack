@@ -114,8 +114,6 @@ public class InitializingDBComponent implements InitializingBean {
 		String sqlFilePath = "sql/sqlite/*";
 		if(componentConstants.getMysql().isEnable()) {
 			sqlFilePath = "sql/mysql/*";
-		}else if(componentConstants.isH2Enable()) {
-			sqlFilePath = "sql/h2/*";
 		}
 		Resource[] resources = new PathMatchingResourcePatternResolver()
 				.getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + sqlFilePath);
