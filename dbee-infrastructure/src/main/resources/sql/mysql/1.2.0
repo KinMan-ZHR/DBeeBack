@@ -1,6 +1,4 @@
 drop table if exists replica_metrics;
-alter table deployment_version add column env_id bigint default 0 comment '环境编号' after version_name;
-
 create table metrics_0 (
 	id bigint primary key auto_increment not null comment '主键id',
 	replica_name varchar (64) default null comment '副本名称',

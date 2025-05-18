@@ -238,32 +238,7 @@ public class GlobalConfigApplicationService extends DeploymentApplicationService
 		imageRepo.setItemType(GlobalConfigItemTypeEnum.IMAGE_REPO.getCode());
 		return addOrUpdateGlobalConfig(imageRepo);
 	}
-	
-	public Void addOrUpdateLdap(Ldap ldap) {
-		ldap.setItemType(GlobalConfigItemTypeEnum.LDAP.getCode());
-		return addOrUpdateGlobalConfig(ldap);
-	}
-	
-	public Void addOrUpdateWeChat(WeChat wechat) {
-		wechat.setItemType(GlobalConfigItemTypeEnum.WECHAT.getCode());
-		return addOrUpdateGlobalConfig(wechat);
-	}
-	
-	public Void addOrUpdateDingDing(DingDing dingding) {
-		dingding.setItemType(GlobalConfigItemTypeEnum.DING_DING.getCode());
-		return addOrUpdateGlobalConfig(dingding);
-	}
-	
-	public Void addOrUpdateFeiShu(FeiShu feishu) {
-		feishu.setItemType(GlobalConfigItemTypeEnum.FEI_SHU.getCode());
-		return addOrUpdateGlobalConfig(feishu);
-	}
-	
-	public Void addOrUpdateCas(BaseGlobalConfig config) {
-		config.setItemType(GlobalConfigItemTypeEnum.CAS.getCode());
-		return addOrUpdateGlobalConfig(config);
-	}
-	
+
 	public PageData<EnvTemplate> envTemplatePage(GlobalConfigPageParam pageParam) {
 		GlobalConfigParam bizParam = new GlobalConfigParam();
 		bizParam.setPageNum(pageParam.getPageNum());

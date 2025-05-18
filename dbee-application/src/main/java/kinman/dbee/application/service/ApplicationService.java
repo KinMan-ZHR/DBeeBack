@@ -126,11 +126,6 @@ public abstract class ApplicationService {
 	public GlobalConfigAgg globalConfig() {
 		GlobalConfigParam param = new GlobalConfigParam();
 		param.setItemTypes(Arrays.asList(
-				GlobalConfigItemTypeEnum.CAS.getCode(),
-				GlobalConfigItemTypeEnum.LDAP.getCode(),
-				GlobalConfigItemTypeEnum.WECHAT.getCode(),
-				GlobalConfigItemTypeEnum.DING_DING.getCode(),
-				GlobalConfigItemTypeEnum.FEI_SHU.getCode(),
 				GlobalConfigItemTypeEnum.CODE_REPO.getCode(),
 				GlobalConfigItemTypeEnum.IMAGE_REPO.getCode(),
 				GlobalConfigItemTypeEnum.MAVEN.getCode(),
@@ -144,36 +139,6 @@ public abstract class ApplicationService {
 		configParam.setId(queryParam.getGlobalConfigId());
 		configParam.setItemTypes(queryParam.getItemTypes());
 		return globalConfigRepository.queryAgg(configParam);
-	}
-	
-	public Ldap queryLdap() {
-		GlobalConfigParam configParam = new GlobalConfigParam();
-		configParam.setItemType(GlobalConfigItemTypeEnum.LDAP.getCode());
-		return globalConfigRepository.queryAgg(configParam).getLdap();
-	}
-	
-	public WeChat queryWeChat() {
-		GlobalConfigParam configParam = new GlobalConfigParam();
-		configParam.setItemType(GlobalConfigItemTypeEnum.WECHAT.getCode());
-		return globalConfigRepository.queryAgg(configParam).getWechat();
-	}
-	
-	public DingDing queryDingDing() {
-		GlobalConfigParam configParam = new GlobalConfigParam();
-		configParam.setItemType(GlobalConfigItemTypeEnum.DING_DING.getCode());
-		return globalConfigRepository.queryAgg(configParam).getDingding();
-	}
-	
-	public FeiShu queryFeiShu() {
-		GlobalConfigParam configParam = new GlobalConfigParam();
-		configParam.setItemType(GlobalConfigItemTypeEnum.FEI_SHU.getCode());
-		return globalConfigRepository.queryAgg(configParam).getFeishu();
-	}
-	
-	public CAS queryCas() {
-		GlobalConfigParam configParam = new GlobalConfigParam();
-		configParam.setItemType(GlobalConfigItemTypeEnum.CAS.getCode());
-		return globalConfigRepository.queryAgg(configParam).getCas();
 	}
 	
 	public GlobalConfigAgg envTemplateQuery(GlobalConfigQueryParam queryParam) {
@@ -209,10 +174,8 @@ public abstract class ApplicationService {
 			if(componentConstants.getKubernetesClient().equals("fabric8")) {
 				return new K8sClusterStrategy();
 			}
-			return new kinman.dbee.infrastructure.strategy.cluster.K8sClusterStrategy();
-		}else {
-			return new kinman.dbee.infrastructure.strategy.cluster.K8sClusterStrategy();
 		}
+		return new K8sClusterStrategy();
 	}
 	
 	protected void hasRights(LoginUser loginUser, String appId) {

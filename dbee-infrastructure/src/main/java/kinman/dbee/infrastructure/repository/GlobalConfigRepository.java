@@ -52,29 +52,6 @@ public class GlobalConfigRepository extends BaseRepository<GlobalConfigParam, Gl
 			if(StringUtils.isBlank(po.getItemValue())) {
 				continue;
 			}
-			if(GlobalConfigItemTypeEnum.CAS.getCode().equals(po.getItemType())) {
-				globalConfig.setCas(JsonUtils.parseToObject(po.getItemValue(), CAS.class));
-				continue;
-			}
-			if(GlobalConfigItemTypeEnum.LDAP.getCode().equals(po.getItemType())) {
-				globalConfig.setLdap(JsonUtils.parseToObject(po.getItemValue(), Ldap.class));
-				continue;
-			}
-			if(GlobalConfigItemTypeEnum.WECHAT.getCode().equals(po.getItemType())) {
-				WeChat wechat = JsonUtils.parseToObject(po.getItemValue(), WeChat.class);
-				globalConfig.setWechat(wechat);
-				continue;
-			}
-			if(GlobalConfigItemTypeEnum.DING_DING.getCode().equals(po.getItemType())) {
-				DingDing dingding = JsonUtils.parseToObject(po.getItemValue(), DingDing.class);
-				globalConfig.setDingding(dingding);
-				continue;
-			}
-			if(GlobalConfigItemTypeEnum.FEI_SHU.getCode().equals(po.getItemType())) {
-				FeiShu feiShu = JsonUtils.parseToObject(po.getItemValue(), FeiShu.class);
-				globalConfig.setFeishu(feiShu);
-				continue;
-			}
 			if(GlobalConfigItemTypeEnum.CODE_REPO.getCode().equals(po.getItemType())) {
 				globalConfig.setCodeRepo(JsonUtils.parseToObject(po.getItemValue(), CodeRepo.class));
 				continue;

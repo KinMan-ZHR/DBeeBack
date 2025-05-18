@@ -24,13 +24,8 @@ import kinman.dbee.api.response.model.GlobalConfigAgg;
 import kinman.dbee.api.response.model.SysUser;
 import kinman.dbee.infrastructure.param.SysUserParam;
 import kinman.dbee.infrastructure.repository.po.SysUserPO;
-import kinman.dbee.infrastructure.strategy.login.CasUserStrategy;
-import kinman.dbee.infrastructure.strategy.login.DingDingUserStrategy;
-import kinman.dbee.infrastructure.strategy.login.FeiShuUserStrategy;
-import kinman.dbee.infrastructure.strategy.login.LdapUserStrategy;
 import kinman.dbee.infrastructure.strategy.login.NormalUserStrategy;
 import kinman.dbee.infrastructure.strategy.login.UserStrategy;
-import kinman.dbee.infrastructure.strategy.login.WeChatUserStrategy;
 import kinman.dbee.infrastructure.strategy.login.dto.LoginUser;
 import kinman.dbee.infrastructure.strategy.login.param.LoginUserParam;
 import kinman.dbee.infrastructure.utils.BeanUtils;
@@ -193,7 +188,7 @@ public class SysUserApplicationService extends BaseApplicationService<SysUser, S
 	 * 
 	 * 查询用户列表
 	 * 
-	 * @param 用户参数
+	 * @param
 	 * @return 符合条件的用户列表
 	 */
 	public PageData<SysUser> page(UserPageParam userPageParam) {
@@ -410,16 +405,6 @@ public class SysUserApplicationService extends BaseApplicationService<SysUser, S
 	private UserStrategy userStrategy(Integer loginSource) {
 		if (RegisteredSourceEnum.DBEE.getCode().equals(loginSource)) {
 			return new NormalUserStrategy();
-		} else if (RegisteredSourceEnum.LDAP.getCode().equals(loginSource)) {
-			return new LdapUserStrategy();
-		}else if (RegisteredSourceEnum.WECHAT.getCode().equals(loginSource)) {
-			return new WeChatUserStrategy();
-		}else if (RegisteredSourceEnum.DINGDING.getCode().equals(loginSource)) {
-			return new DingDingUserStrategy();
-		}else if (RegisteredSourceEnum.FEISHU.getCode().equals(loginSource)) {
-			return new FeiShuUserStrategy();
-		}else if (RegisteredSourceEnum.CAS.getCode().equals(loginSource)) {
-			return new CasUserStrategy();
 		}
 		return null;
 	}

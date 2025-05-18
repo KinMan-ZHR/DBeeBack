@@ -46,20 +46,6 @@ public class AppParam extends PageParam {
 	 */
 	private List<String> affinityAppNames;
 
-	/**
-	 * 一级部门
-	 */
-	private String firstDepartment;
-
-	/**
-	 * 二级部门
-	 */
-	private String secondDepartment;
-
-	/**
-	 * 三级部门
-	 */
-	private String thirdDepartment;
 
 	/**
 	 * 应用描述
@@ -129,30 +115,6 @@ public class AppParam extends PageParam {
 
 	public void setCodeRepoPath(String codeRepoPath) {
 		this.codeRepoPath = codeRepoPath;
-	}
-
-	public String getFirstDepartment() {
-		return firstDepartment;
-	}
-
-	public void setFirstDepartment(String firstDepartment) {
-		this.firstDepartment = firstDepartment;
-	}
-
-	public String getSecondDepartment() {
-		return secondDepartment;
-	}
-
-	public void setSecondDepartment(String secondDepartment) {
-		this.secondDepartment = secondDepartment;
-	}
-
-	public String getThirdDepartment() {
-		return thirdDepartment;
-	}
-
-	public void setThirdDepartment(String thirdDepartment) {
-		this.thirdDepartment = thirdDepartment;
 	}
 
 	public String getDescription() {

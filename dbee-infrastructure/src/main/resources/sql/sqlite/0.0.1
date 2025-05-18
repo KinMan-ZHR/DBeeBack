@@ -545,3 +545,5 @@ create table metrics_31 (
 	deletion_status integer default 0 -- '删除状态，0：未删除，1：已删除'
 ); -- '副本指标'
 create index index_metrics_31 on metrics_31(update_time, replica_name);
+alter table app_env add column ingress_host varchar(128) default null;
+alter table global_config add column version bigint default 0;
