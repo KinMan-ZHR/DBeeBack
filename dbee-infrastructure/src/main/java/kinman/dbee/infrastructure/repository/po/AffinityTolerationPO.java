@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 亲和容忍配置
  */
-@TableName("AFFINITY_TOLERATION")
+@TableName("affinity_toleration")
 public class AffinityTolerationPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

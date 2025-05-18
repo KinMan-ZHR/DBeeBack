@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 环境表
  */
-@TableName("APP_ENV")
+@TableName("app_env")
 public class AppEnvPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

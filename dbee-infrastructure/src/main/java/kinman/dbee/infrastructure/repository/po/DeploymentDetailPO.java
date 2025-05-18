@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 分支部署明细表
  */
-@TableName("DEPLOYMENT_DETAIL")
+@TableName("deployment_detail")
 public class DeploymentDetailPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

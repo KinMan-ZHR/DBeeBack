@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 指标
  */
-@TableName("METRICS")
+@TableName("metrics")
 public class MetricsPO extends BasePO {
 
 	private static final long serialVersionUID = 1L;

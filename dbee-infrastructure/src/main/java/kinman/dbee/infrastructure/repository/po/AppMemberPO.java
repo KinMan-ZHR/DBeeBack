@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 应用相关用户
  */
-@TableName("APP_MEMBER")
+@TableName("app_member")
 public class AppMemberPO extends BasePO {
 
 	private static final long serialVersionUID = 1L;
