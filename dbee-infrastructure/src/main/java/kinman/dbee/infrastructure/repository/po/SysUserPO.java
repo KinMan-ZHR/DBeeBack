@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 用户表
  */
-@TableName("sys_user")
+@TableName("SYS_USER")
 public class SysUserPO extends BasePO {
 
 	private static final long serialVersionUID = 1L;

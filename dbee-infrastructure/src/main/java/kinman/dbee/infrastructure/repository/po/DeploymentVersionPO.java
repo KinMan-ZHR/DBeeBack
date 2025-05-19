@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 部署版本
  */
-@TableName("deployment_version")
+@TableName("DEPLOYMENT_VERSION")
 public class DeploymentVersionPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

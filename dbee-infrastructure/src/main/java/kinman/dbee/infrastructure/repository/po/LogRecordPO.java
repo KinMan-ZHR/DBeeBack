@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 日志记录
  */
-@TableName("log_record")
+@TableName("LOG_RECORD")
 public class LogRecordPO extends BaseAppPO {
 
 	private static final long serialVersionUID = 1L;

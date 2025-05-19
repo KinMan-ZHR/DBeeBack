@@ -77,15 +77,6 @@ public class DataSourceConfig{
 			dataSource.setJdbcUrl(componentConstants.getMysql().getUrl());
 			dataSource.setUsername(componentConstants.getMysql().getUser());
 			dataSource.setPassword(componentConstants.getMysql().getPassword());
-		}else if(componentConstants.isH2Enable()) {
-			//由于h2使用的MV_STORE存储引擎，当进行很多事务操作时，占用空间超大，并且不能释放空间，
-			//这里不再使用h2作为默认的存储方式
-			dataSource = new DefaultHikariDataSource();
-			dataSource.setDriverClassName("org.h2.Driver");
-			dataSource.setJdbcUrl("jdbc:h2:tcp://localhost:59539/"
-				+ componentConstants.getDataPath() + "db/dbee");
-			dataSource.setUsername("dbee");
-			dataSource.setPassword("dbee");
 		}else {
 			File dbPath = new File(componentConstants.getDataPath() + "db");
 			if(!dbPath.exists() && !dbPath.mkdirs()){
@@ -110,8 +101,6 @@ public class DataSourceConfig{
 		DbType dbType = DbType.SQLITE;
 		if(componentConstants.getMysql().isEnable()) {
 			dbType = DbType.MYSQL;
-		}else if(componentConstants.isH2Enable()) {
-			dbType = DbType.H2;
 		}
 		return new PaginationInnerInterceptor(dbType);
 	}

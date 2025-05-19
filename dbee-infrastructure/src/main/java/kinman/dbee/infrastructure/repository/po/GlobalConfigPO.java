@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 /**
  * 全局配置表
  */
-@TableName("global_config")
+@TableName("GLOBAL_CONFIG")
 public class GlobalConfigPO extends BasePO {
 
 	private static final long serialVersionUID = 1L;

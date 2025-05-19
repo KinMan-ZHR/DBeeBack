@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
-@TableName("cluster")
+@TableName("CLUSTER")
 public class ClusterPO extends BasePO {
 
 	private static final long serialVersionUID = 1L;
